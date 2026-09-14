@@ -1,0 +1,75 @@
+{
+  "persona": {
+    "name": "Coach",
+    "voiceStyle": "Calm, direct, specific. Short spoken sentences. No fluff.",
+    "greeting": "Ready when you are. I will ask a question, you answer, then I will score it and tell you what to tighten."
+  },
+  "scoringRubric": [
+    {
+      "id": "coverage",
+      "weight": 0.5,
+      "description": "How many key points from the sample answer appear in the user answer."
+    },
+    {
+      "id": "accuracy",
+      "weight": 0.3,
+      "description": "No contradictions with the sample answer."
+    },
+    {
+      "id": "clarity",
+      "weight": 0.2,
+      "description": "Structure, completeness, STAR where behavioral."
+    }
+  ],
+  "feedbackTemplates": {
+    "high": [
+      "Strong answer. You covered {covered}. To push it further, add {missing}.",
+      "Great framing. Keep your structure and tighten it with {missing}."
+    ],
+    "mid": [
+      "You have the core idea. Missing: {missing}. Reword this part: {suggestion}.",
+      "Solid start. Add {missing} and make the flow clearer."
+    ],
+    "low": [
+      "Reset with this structure: {structure}. Must include: {missing}.",
+      "Start with a simple framework and cover these points: {missing}."
+    ]
+  },
+  "insights": [
+    {
+      "id": "star",
+      "tags": ["behavioral", "basics", "conflict", "failure"],
+      "guidance": "Use STAR: Situation, Task, Action, Result. Spend most time on Action and Result."
+    },
+    {
+      "id": "salary",
+      "tags": ["salary", "compensation", "basics"],
+      "guidance": "Give a researched range, explain factors, and show flexibility based on total package and scope."
+    },
+    {
+      "id": "intro",
+      "tags": ["tell me about yourself", "introduction", "basics"],
+      "guidance": "Use a concise arc: who you are, strongest recent achievement with numbers, and why this role fits now."
+    },
+    {
+      "id": "numbers",
+      "tags": ["impact", "results", "metrics"],
+      "guidance": "Quantify outcomes whenever possible, such as latency reduction, conversion lift, or defect reduction."
+    },
+    {
+      "id": "filler-words",
+      "tags": ["delivery", "speaking", "clarity"],
+      "guidance": "Pause instead of filler words. Short pauses sound more confident than saying um repeatedly."
+    },
+    {
+      "id": "technical-structure",
+      "tags": ["technical", "system design", "architecture"],
+      "guidance": "For technical answers: define the goal, explain core mechanism, discuss tradeoffs, then mention practical use."
+    }
+  ],
+  "conversation": {
+    "askNext": ["Next question.", "Let us try another one.", "Good, moving to the next prompt."],
+    "encourage": ["Good. Lock that phrasing in.", "Nice progress. Keep the structure tight.", "Strong direction. Keep going."],
+    "correct": ["Drop {wrong}. Say {better} instead.", "Avoid vague claims. Use this: {better}."]
+  }
+}

@@ -1,0 +1,157 @@
+{
+  "mode": "intermediate",
+  "title": "Intermediate",
+  "description": "Applied engineering questions that test tradeoffs, architecture decisions, and team execution.",
+  "questions": [
+    {
+      "id": "intermediate-001",
+      "category": "JavaScript",
+      "question": "How does the event loop handle microtasks and macrotasks?",
+      "sampleAnswer": "I think of it as a queue priority model. Synchronous code runs first, then the runtime processes microtasks like Promise callbacks before moving to the next macrotask such as setTimeout. That is why Promise.then often executes before a zero-delay timeout. Understanding this helps me avoid race conditions in UI updates and asynchronous state handling.",
+      "keyPoints": ["sync first", "microtasks before macrotasks", "Promise then vs setTimeout"],
+      "hints": ["Define both queue types clearly."],
+      "followUps": ["Where does requestAnimationFrame fit?"],
+      "voicePrompt": "Explain microtasks and macrotasks in the event loop."
+    },
+    {
+      "id": "intermediate-002",
+      "category": "Vue",
+      "question": "When would you use a composable in Vue?",
+      "sampleAnswer": "I create a composable when logic is reused across multiple components or when a concern should stay independent from UI markup. Good examples are speech handling, API polling, and local storage sync. A composable keeps stateful logic in one place and improves testability because I can validate behavior without rendering the full page. I keep composables focused and avoid turning them into huge utility dumps.",
+      "keyPoints": ["reusable stateful logic", "decouple logic from UI", "keep scope focused"],
+      "hints": ["Give concrete examples."],
+      "followUps": ["When is a simple helper function enough?"],
+      "voicePrompt": "When do you write a Vue composable?"
+    },
+    {
+      "id": "intermediate-003",
+      "category": "API Design",
+      "question": "How do you design a resilient frontend API call flow?",
+      "sampleAnswer": "I start with explicit request states: loading, success, and error, then add retries only for safe and transient failures. I set request timeouts, handle cancellation for stale views, and show clear user feedback when something fails. For critical actions I use idempotent endpoints or request IDs so duplicate submissions do not create duplicate records. This approach keeps the UI responsive and reduces inconsistent data states.",
+      "keyPoints": ["request states", "timeouts and cancellation", "idempotency and retries"],
+      "hints": ["Mention user feedback."],
+      "followUps": ["How would you handle offline retries?"],
+      "voicePrompt": "Describe a resilient frontend API strategy."
+    },
+    {
+      "id": "intermediate-004",
+      "category": "State Management",
+      "question": "How do you decide between local component state and global store state?",
+      "sampleAnswer": "I keep state local when only one component or page needs it, like a temporary form draft. I move state to a global store when multiple views need shared access, when state must survive navigation, or when updates come from different sources. The goal is to avoid both prop drilling and unnecessary global complexity. I choose the smallest scope that keeps data flow clear.",
+      "keyPoints": ["local for isolated concerns", "global for shared lifecycle", "smallest necessary scope"],
+      "hints": ["Use practical examples."],
+      "followUps": ["What are signs of overusing global state?"],
+      "voicePrompt": "How do you choose local vs global state?"
+    },
+    {
+      "id": "intermediate-005",
+      "category": "Performance",
+      "question": "How would you investigate a slow page load in production?",
+      "sampleAnswer": "I begin with real-user metrics and a baseline from Core Web Vitals to identify whether the issue is network, render, or script execution. Then I inspect waterfall traces, bundle composition, and third-party script impact. I prioritize fixes with highest user impact, such as reducing blocking JavaScript, optimizing large assets, and deferring non-critical code. After each change I verify with the same metrics to confirm improvement.",
+      "keyPoints": ["measure first", "inspect waterfall and bundles", "validate impact after fixes"],
+      "hints": ["Use an evidence-driven flow."],
+      "followUps": ["How do you avoid regressions later?"],
+      "voicePrompt": "Walk through debugging slow page loads."
+    },
+    {
+      "id": "intermediate-006",
+      "category": "Security",
+      "question": "How do you secure token handling in a web app?",
+      "sampleAnswer": "I minimize token exposure by preferring secure, HTTP-only cookies for session tokens when architecture allows it. If local storage is unavoidable, I apply strict XSS defenses because any script injection can leak tokens. I also enforce short expirations, rotation, and server-side validation for audience and expiry claims. Finally, I make logout and token revocation clear so compromised tokens are invalidated quickly.",
+      "keyPoints": ["reduce token exposure", "defend against XSS", "rotation and expiry"],
+      "hints": ["Discuss tradeoffs, not absolutes."],
+      "followUps": ["When are cookies not enough?"],
+      "voicePrompt": "How do you handle auth tokens safely?"
+    },
+    {
+      "id": "intermediate-007",
+      "category": "Testing",
+      "question": "How do you test a feature with voice input and fallback typing?",
+      "sampleAnswer": "I separate the speech logic into a composable and mock browser speech APIs in tests to control transcripts and errors. Then I verify the typed path independently so unsupported speech still allows submission. I also test permission-denied and unsupported-browser states because those are common in mobile environments. End-to-end tests should cover mode switching to make sure the same answer field is updated consistently.",
+      "keyPoints": ["mock speech APIs", "test fallback path", "cover error states"],
+      "hints": ["Mention both unit and E2E levels."],
+      "followUps": ["How do you test on iOS Safari?"],
+      "voicePrompt": "How would you test voice input with typed fallback?"
+    },
+    {
+      "id": "intermediate-008",
+      "category": "CSS",
+      "question": "How do you build a responsive layout that also respects iPhone safe areas?",
+      "sampleAnswer": "I start mobile-first with flexible containers and spacing tokens, then add breakpoint adjustments only where needed. For iPhone and standalone PWAs I apply env(safe-area-inset-top) and env(safe-area-inset-bottom) so controls stay clear of the notch and home indicator. I keep primary actions sticky and large enough for touch. This gives consistent behavior across phones while still scaling to desktop.",
+      "keyPoints": ["mobile-first layout", "safe-area env variables", "touch-friendly controls"],
+      "hints": ["Mention sticky controls for actions."],
+      "followUps": ["How do you test safe areas on desktop?"],
+      "voicePrompt": "How do you design for responsive safe-area layouts?"
+    },
+    {
+      "id": "intermediate-009",
+      "category": "Data Modeling",
+      "question": "How would you handle slightly messy JSON input safely?",
+      "sampleAnswer": "I define strict runtime checks and normalize known aliases, like mapping referenceAnswer or answer into sampleAnswer. Missing optional fields get defaults, but required fields fail fast with clear error messages that include file and record id. This gives flexibility for editors while protecting app behavior. I avoid silent failures so content mistakes are obvious and easy to fix.",
+      "keyPoints": ["runtime validation", "alias normalization", "clear error reporting"],
+      "hints": ["Differentiate optional vs required fields."],
+      "followUps": ["Would you skip invalid records or fail everything?"],
+      "voicePrompt": "How do you normalize messy JSON data?"
+    },
+    {
+      "id": "intermediate-010",
+      "category": "Behavioral",
+      "question": "Tell me about a time you improved code quality in a team.",
+      "sampleAnswer": "In one project we had frequent regressions after feature releases, so I proposed adding a lightweight quality checklist and shared lint rules for pull requests. I worked with teammates to add focused tests around the most fragile areas and created clear ownership for review. Within a few sprints our post-release bug rate dropped and confidence increased. The key lesson was improving process with the team, not forcing a heavy framework.",
+      "keyPoints": ["problem context", "specific actions", "measurable result"],
+      "hints": ["Use STAR structure."],
+      "followUps": ["What resistance did you face?"],
+      "voicePrompt": "Share a time you improved team code quality."
+    },
+    {
+      "id": "intermediate-011",
+      "category": "Architecture",
+      "question": "How do you decide if a feature should be split into multiple components?",
+      "sampleAnswer": "I split components when one file has mixed responsibilities, repeated UI sections, or logic that is hard to test and reason about. A good split keeps each component focused on one concern and creates clearer props contracts. I avoid splitting too early because too many tiny files can hurt readability. I refactor when complexity or reuse justifies the change.",
+      "keyPoints": ["single responsibility", "clear contracts", "avoid premature splitting"],
+      "hints": ["Explain tradeoff between size and clarity."],
+      "followUps": ["What is your threshold for refactor?"],
+      "voicePrompt": "When do you split components?"
+    },
+    {
+      "id": "intermediate-012",
+      "category": "HTTP",
+      "question": "Explain optimistic UI updates and their risks.",
+      "sampleAnswer": "Optimistic updates change the UI immediately before the server confirms success, so the app feels faster. I use them for actions with high success rates and reversible effects, like toggles. The risk is mismatch when the request fails, so I always keep rollback logic and clear error messages. Without rollback, users can trust incorrect state and make wrong decisions.",
+      "keyPoints": ["immediate UI feedback", "rollback on failure", "choose suitable operations"],
+      "hints": ["Mention mismatch risk."],
+      "followUps": ["How do you avoid flicker on rollback?"],
+      "voicePrompt": "What are optimistic updates and tradeoffs?"
+    },
+    {
+      "id": "intermediate-013",
+      "category": "Version Control",
+      "question": "How do you keep pull requests reviewable?",
+      "sampleAnswer": "I keep changes scoped to one problem, write a clear description of what changed and why, and avoid mixing refactors with feature logic unless necessary. I also include screenshots or recordings for UI changes and call out testing steps. Smaller pull requests get faster, higher-quality reviews and reduce merge conflicts. If work is large, I split it into sequential PRs.",
+      "keyPoints": ["single-purpose PRs", "clear context", "include verification evidence"],
+      "hints": ["Mention splitting large work."],
+      "followUps": ["How do you handle urgent hotfixes?"],
+      "voicePrompt": "How do you make PRs easy to review?"
+    },
+    {
+      "id": "intermediate-014",
+      "category": "Problem Solving",
+      "question": "A bug only appears in production. What do you do first?",
+      "sampleAnswer": "First, I gather production evidence: logs, timestamps, affected routes, and browser versions to identify a pattern. Then I create the closest local reproduction with the same environment flags and data shape. I avoid blind fixes and instead test hypotheses in small steps until the root cause is clear. Once patched, I add monitoring and regression coverage so we can detect similar issues earlier.",
+      "keyPoints": ["collect evidence", "reproduce with parity", "fix with validation"],
+      "hints": ["Avoid guessing as a strategy."],
+      "followUps": ["How do feature flags help here?"],
+      "voicePrompt": "How do you tackle production-only bugs?"
+    },
+    {
+      "id": "intermediate-015",
+      "category": "Communication",
+      "question": "How do you explain a technical tradeoff to non-technical stakeholders?",
+      "sampleAnswer": "I frame options by user impact, risk, delivery time, and long-term cost instead of deep implementation details. Then I recommend one option with a clear reason and what we give up by not choosing the others. I use plain language and concrete examples so stakeholders can make informed decisions quickly. The goal is alignment, not showing technical depth.",
+      "keyPoints": ["focus on impact and risk", "recommend with rationale", "use plain language"],
+      "hints": ["Show decision clarity."],
+      "followUps": ["How do you handle disagreement?"],
+      "voicePrompt": "How do you explain technical tradeoffs simply?"
+    }
+  ]
+}

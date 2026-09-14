@@ -1,0 +1,127 @@
+{
+  "mode": "advanced",
+  "title": "Advanced",
+  "description": "Deep technical and system-thinking questions focused on architecture, reliability, and scaling choices.",
+  "questions": [
+    {
+      "id": "advanced-001",
+      "category": "System Design",
+      "question": "Design a high-level architecture for a real-time collaboration editor.",
+      "sampleAnswer": "I would separate the system into a low-latency collaboration layer and a durable storage layer. Clients connect to a realtime gateway using WebSocket, and edits are represented as operations that are transformed or merged using CRDT or operational transform rules. A message broker fans updates to connected users while a document service snapshots state periodically to persistent storage. I would also include presence service, permission checks, and conflict recovery to support reconnection and eventual consistency.",
+      "keyPoints": ["realtime gateway", "conflict resolution strategy", "durable snapshots and permissions"],
+      "hints": ["Structure by components first."],
+      "followUps": ["How do you handle offline edits?"],
+      "voicePrompt": "Design a realtime collaboration editor at a high level."
+    },
+    {
+      "id": "advanced-002",
+      "category": "Scalability",
+      "question": "How do you scale a read-heavy API that starts timing out?",
+      "sampleAnswer": "I first profile the bottleneck to confirm whether latency comes from database queries, application code, or network overhead. For read-heavy traffic, I add layered caching, starting with query-level caching and optionally CDN edge caching for public data. I optimize hot queries with proper indexes and pagination, and I monitor cache hit ratio to avoid stale or ineffective caches. If demand keeps growing, I use read replicas and async refresh patterns to keep response times stable.",
+      "keyPoints": ["measure bottleneck", "layered caching", "query/index optimization and replicas"],
+      "hints": ["Explain stale data tradeoff."],
+      "followUps": ["What metrics prove scaling success?"],
+      "voicePrompt": "How would you scale a read-heavy API?"
+    },
+    {
+      "id": "advanced-003",
+      "category": "Frontend Architecture",
+      "question": "How would you design a maintainable design system for multiple teams?",
+      "sampleAnswer": "I start with design tokens for color, spacing, typography, and motion so visual decisions are centralized and reusable. Then I build a small set of accessible primitives like buttons, inputs, and cards with consistent APIs and documentation. Governance is important, so I define contribution rules and versioning to prevent breaking changes across teams. I also provide usage examples and migration guides so adoption stays practical rather than theoretical.",
+      "keyPoints": ["design tokens", "accessible primitives", "governance and versioning"],
+      "hints": ["Mention documentation and migration."],
+      "followUps": ["How do you avoid token sprawl?"],
+      "voicePrompt": "Design a cross-team frontend design system."
+    },
+    {
+      "id": "advanced-004",
+      "category": "Reliability",
+      "question": "How do you make background jobs reliable?",
+      "sampleAnswer": "I make each job idempotent so retries do not create duplicate side effects. Then I use explicit retry policies with backoff, dead-letter queues for poison messages, and observability around failure rates and processing latency. Jobs should have clear ownership boundaries and schema validation to reject bad payloads early. Reliability improves when failures are visible, retry-safe, and recoverable without manual database edits.",
+      "keyPoints": ["idempotency", "retries and dead-letter queues", "observability and validation"],
+      "hints": ["Focus on failure handling path."],
+      "followUps": ["When should a job stop retrying?"],
+      "voicePrompt": "How do you build reliable background jobs?"
+    },
+    {
+      "id": "advanced-005",
+      "category": "Security",
+      "question": "How do you approach threat modeling for a new feature?",
+      "sampleAnswer": "I map assets, entry points, trust boundaries, and attacker goals before writing mitigation tasks. Then I run a lightweight STRIDE-style pass to identify spoofing, tampering, data exposure, and privilege risks in each flow step. I prioritize mitigations by impact and exploitability, then convert them into engineering requirements, tests, and monitoring alerts. Threat modeling is effective when it drives concrete implementation changes, not just a document.",
+      "keyPoints": ["assets and trust boundaries", "structured risk analysis", "actionable mitigations"],
+      "hints": ["Tie risks to controls."],
+      "followUps": ["How often should threat models be updated?"],
+      "voicePrompt": "Explain your threat modeling process."
+    },
+    {
+      "id": "advanced-006",
+      "category": "Data Consistency",
+      "question": "How do you keep data consistent across services?",
+      "sampleAnswer": "I avoid distributed transactions by designing clear ownership per service and using event-driven workflows for cross-service updates. For critical flows I use the outbox pattern so state changes and events are recorded atomically at the producer side. Consumers process events idempotently and support replay for recovery. Consistency becomes predictable when contracts are versioned and failure paths are explicitly designed.",
+      "keyPoints": ["service ownership", "outbox pattern", "idempotent consumers and replay"],
+      "hints": ["Mention eventual consistency."],
+      "followUps": ["How do you handle schema evolution?"],
+      "voicePrompt": "How would you maintain consistency in microservices?"
+    },
+    {
+      "id": "advanced-007",
+      "category": "Performance",
+      "question": "What is your strategy for preventing frontend performance regressions?",
+      "sampleAnswer": "I define performance budgets for key metrics such as bundle size and Core Web Vitals, then enforce them in CI where possible. I instrument both lab and field monitoring so regressions are caught before and after release. Large changes include performance verification in the review checklist, especially for third-party scripts and images. Prevention works best when performance is treated as a product requirement, not a one-time cleanup.",
+      "keyPoints": ["performance budgets", "CI and monitoring", "review discipline"],
+      "hints": ["Include both pre and post release checks."],
+      "followUps": ["How strict should budgets be?"],
+      "voicePrompt": "How do you prevent frontend performance regressions?"
+    },
+    {
+      "id": "advanced-008",
+      "category": "Leadership",
+      "question": "How do you lead a technically complex project with uncertain requirements?",
+      "sampleAnswer": "I start by defining a thin vertical slice that validates core assumptions quickly, then evolve requirements based on evidence. I keep risks visible in a decision log and break delivery into milestones with explicit exit criteria. Communication cadence matters, so I run regular checkpoints with engineering and product to resolve ambiguity early. This keeps momentum while avoiding expensive overbuild on assumptions.",
+      "keyPoints": ["validate assumptions early", "risk and decision tracking", "regular alignment"],
+      "hints": ["Use milestone language."],
+      "followUps": ["How do you protect team morale in uncertainty?"],
+      "voicePrompt": "How do you lead uncertain technical projects?"
+    },
+    {
+      "id": "advanced-009",
+      "category": "System Design",
+      "question": "How would you design a notification system that supports retries and user preferences?",
+      "sampleAnswer": "I would separate event ingestion, delivery orchestration, and channel providers like email or push. User preferences are checked before enqueueing each channel task to avoid unwanted notifications. Delivery tasks are retryable with exponential backoff and dead-letter handling, and each attempt is logged for traceability. A status store tracks sent, failed, and suppressed events so both users and support teams can audit outcomes.",
+      "keyPoints": ["separate ingestion and delivery", "respect preferences", "retry and auditability"],
+      "hints": ["Show channel-agnostic design."],
+      "followUps": ["How do you avoid duplicate sends?"],
+      "voicePrompt": "Design a robust notification system."
+    },
+    {
+      "id": "advanced-010",
+      "category": "Databases",
+      "question": "When do you denormalize data, and what safeguards do you add?",
+      "sampleAnswer": "I denormalize when read performance or query simplicity is more important than strict normalization, especially for high-traffic dashboards. The tradeoff is write complexity and risk of stale copies, so I add clear update paths, version timestamps, and consistency checks. I also document source-of-truth ownership so teams know which field is authoritative. Denormalization is useful when done intentionally with monitoring, not as an accidental shortcut.",
+      "keyPoints": ["read optimization use case", "staleness tradeoff", "consistency safeguards"],
+      "hints": ["State source-of-truth clearly."],
+      "followUps": ["How do you backfill denormalized fields?"],
+      "voicePrompt": "When do you denormalize data?"
+    },
+    {
+      "id": "advanced-011",
+      "category": "Observability",
+      "question": "What does good observability look like for a web platform?",
+      "sampleAnswer": "Good observability combines logs, metrics, and traces that are correlated by request or session identifiers. I define service-level indicators for user-facing outcomes, not just infrastructure health, and set actionable alerts with clear runbooks. Dashboards should show leading indicators like error spikes, latency percentiles, and saturation trends. The goal is fast diagnosis and confident recovery, not collecting data with no operating plan.",
+      "keyPoints": ["logs metrics traces together", "user-focused SLIs", "actionable alerts and runbooks"],
+      "hints": ["Mention correlation IDs."],
+      "followUps": ["How do you reduce alert fatigue?"],
+      "voicePrompt": "Describe strong observability practices."
+    },
+    {
+      "id": "advanced-012",
+      "category": "Tradeoffs",
+      "question": "How do you decide build vs buy for an internal platform tool?",
+      "sampleAnswer": "I evaluate strategic fit, total cost of ownership, security requirements, and how differentiated the capability is for our team. If a tool is commodity and reliable, buying often saves time and support burden. If deep customization, data residency, or integration control is critical, building can be justified despite higher upfront cost. I present both options with risks and revisit the decision when constraints change.",
+      "keyPoints": ["cost and strategic fit", "commodity vs differentiation", "revisit decision over time"],
+      "hints": ["Frame with business and technical factors."],
+      "followUps": ["What hidden costs are often missed?"],
+      "voicePrompt": "How do you choose build versus buy?"
+    }
+  ]
+}

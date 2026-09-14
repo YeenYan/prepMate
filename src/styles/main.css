@@ -1,0 +1,97 @@
+@import "tailwindcss";
+@import "./design-system.css";
+
+html,
+body,
+#app {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+}
+
+html {
+  overflow: hidden;
+  -webkit-text-size-adjust: 100%;
+  touch-action: manipulation;
+}
+
+body {
+  overflow: hidden;
+  font-family:
+    "SF Pro Text",
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    sans-serif;
+  color: var(--color-text-primary);
+  background:
+    radial-gradient(ellipse 95% 65% at 12% 8%, rgb(125 211 252 / 0.45), transparent 55%),
+    radial-gradient(ellipse 85% 58% at 90% 75%, rgb(248 167 217 / 0.35), transparent 52%),
+    radial-gradient(ellipse 80% 65% at 60% 25%, rgb(196 181 253 / 0.3), transparent 50%),
+    linear-gradient(180deg, #ffffff 0%, #f9f7ff 60%, #f3f0ff 100%);
+}
+
+.app-shell {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.scroll-area {
+  min-height: 0;
+  flex: 1;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+}
+
+.glass {
+  background: var(--color-glass-bg);
+  border: 1px solid var(--color-glass-border);
+  box-shadow: var(--shadow-glass);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+}
+
+.pill-button {
+  border-radius: 999px;
+  border: none;
+  cursor: pointer;
+  font: inherit;
+}
+
+.primary-button {
+  background: var(--gradient-primary);
+  color: #ffffff;
+}
+
+.secondary-button {
+  background: rgb(255 255 255 / 0.85);
+  color: var(--color-text-primary);
+  border: 1px solid rgb(127 115 220 / 0.24);
+}
+
+.soft-input {
+  border-radius: 20px;
+  border: 1px solid rgb(127 115 220 / 0.24);
+  background: rgb(255 255 255 / 0.88);
+  color: var(--color-text-primary);
+}
+
+.score-track {
+  background: linear-gradient(180deg, #ece9ff 0%, #ddd8f8 100%);
+}
+
+.score-fill {
+  background: var(--gradient-primary);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+}

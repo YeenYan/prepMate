@@ -1,0 +1,26 @@
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --color-bg: #fbfbff;
+  --color-bg-body: #f6f4ff;
+  --color-surface: #ffffff;
+  --color-text-primary: #17151f;
+  --color-text-secondary: #676179;
+  --color-accent: #7f73dc;
+  --color-accent-2: #68c8f7;
+  --color-accent-3: #f8a7d9;
+  --color-border: rgb(127 115 220 / 0.18);
+  --color-success: #22c55e;
+  --color-warning: #f59e0b;
+  --color-danger: #ef4444;
+  --color-muted: #928ca5;
+  --color-glass-bg: rgb(255 255 255 / 0.72);
+  --color-glass-border: rgb(255 255 255 / 0.8);
+  --shadow-glass:
+    0 12px 36px rgb(78 37 134 / 0.12),
+    inset 0 1px 0 rgb(255 255 255 / 0.9);
+}
+
+:root {
+  --gradient-primary: linear-gradient(120deg, #68c8f7 0%, #9b8af0 55%, #f8a7d9 100%);
+}
