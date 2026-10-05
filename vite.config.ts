@@ -14,8 +14,8 @@ export default defineConfig(({ mode }) => ({
         name: "PrepMate",
         short_name: "PrepMate",
         description: "Personal interview practice coach",
-        theme_color: "#ffffff",
-        background_color: "#ffffff",
+        theme_color: "#0b0714",
+        background_color: "#0b0714",
         display: "standalone",
         start_url: "/",
         icons: [

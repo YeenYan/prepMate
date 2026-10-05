@@ -1,0 +1,178 @@
+{
+	"mode": "backend",
+	"title": "Backend",
+	"description": "APIs, data, services, and server-side interview questions. Pick a difficulty to practice.",
+	"questions": [
+		{
+			"id": "backend-easy-001",
+			"category": "HTTP",
+			"question": "What is the difference between GET and POST requests?",
+			"sampleAnswer": "GET is mainly for reading data and should be safe and idempotent, meaning it does not change server state when repeated. POST is used to create or process data and can change server state. GET parameters are usually in the URL, while POST data is commonly in the request body. In practice, I use GET for fetching resources and POST when submitting forms or creating records.",
+			"keyPoints": [
+				"read vs write intent",
+				"idempotency concept",
+				"url query vs body"
+			],
+			"hints": [
+				"Define idempotent briefly."
+			],
+			"followUps": [
+				"When would you use PUT instead?"
+			],
+			"voicePrompt": "Compare GET and POST requests.",
+			"difficulty": "easy"
+		},
+		{
+			"id": "backend-easy-002",
+			"category": "APIs",
+			"question": "What is JSON and why is it commonly used in APIs?",
+			"sampleAnswer": "JSON is a lightweight text format for structured data using key-value pairs and arrays. It is language-agnostic, easy for humans to read, and easy for machines to parse. Most web APIs use JSON because JavaScript handles it naturally and many backends support it out of the box. In practice it keeps request and response payloads simple and consistent.",
+			"keyPoints": [
+				"lightweight structured text",
+				"easy to parse",
+				"cross-language support"
+			],
+			"hints": [
+				"Mention objects and arrays."
+			],
+			"followUps": [
+				"When might XML still be used?"
+			],
+			"voicePrompt": "What is JSON and why use it in APIs?",
+			"difficulty": "easy"
+		},
+		{
+			"id": "backend-easy-003",
+			"category": "HTTP",
+			"question": "What does HTTP status code 404 mean?",
+			"sampleAnswer": "A 404 status means the server is reachable but the requested resource was not found at that path. It often happens with wrong URLs, deleted resources, or broken links. From a product side I provide a helpful fallback page and logging so we can trace where bad links come from. It is different from 500, which indicates a server error.",
+			"keyPoints": [
+				"resource not found",
+				"server still reachable",
+				"different from 500"
+			],
+			"hints": [
+				"Give one practical reason for 404."
+			],
+			"followUps": [
+				"How do you handle 404 in SPAs?"
+			],
+			"voicePrompt": "What does a 404 status code tell you?",
+			"difficulty": "easy"
+		},
+		{
+			"id": "backend-intermediate-001",
+			"category": "Data Modeling",
+			"question": "How would you handle slightly messy JSON input safely?",
+			"sampleAnswer": "I define strict runtime checks and normalize known aliases, like mapping referenceAnswer or answer into sampleAnswer. Missing optional fields get defaults, but required fields fail fast with clear error messages that include file and record id. This gives flexibility for editors while protecting app behavior. I avoid silent failures so content mistakes are obvious and easy to fix.",
+			"keyPoints": [
+				"runtime validation",
+				"alias normalization",
+				"clear error reporting"
+			],
+			"hints": [
+				"Differentiate optional vs required fields."
+			],
+			"followUps": [
+				"Would you skip invalid records or fail everything?"
+			],
+			"voicePrompt": "How do you normalize messy JSON data?",
+			"difficulty": "intermediate"
+		},
+		{
+			"id": "backend-intermediate-002",
+			"category": "APIs",
+			"question": "Explain the difference between REST APIs and GraphQL.",
+			"sampleAnswer": "REST exposes resources through URLs and HTTP methods, so clients often make multiple requests or receive extra fields they do not need. GraphQL exposes a schema and lets the client ask for exactly the fields it needs in one query, which reduces over-fetching on complex screens. REST is simpler to cache at the HTTP layer, while GraphQL needs more care around caching and query cost. I choose REST for straightforward CRUD and GraphQL when many clients need different shapes of the same data.",
+			"keyPoints": [
+				"REST is resource and URL based",
+				"GraphQL lets clients select fields",
+				"caching and complexity tradeoff"
+			],
+			"hints": [
+				"Mention over-fetching and under-fetching."
+			],
+			"followUps": [
+				"What are N-plus-one risks in GraphQL?"
+			],
+			"voicePrompt": "What is the difference between REST and GraphQL?",
+			"difficulty": "intermediate"
+		},
+		{
+			"id": "backend-advanced-001",
+			"category": "Scalability",
+			"question": "How do you scale a read-heavy API that starts timing out?",
+			"sampleAnswer": "I first profile the bottleneck to confirm whether latency comes from database queries, application code, or network overhead. For read-heavy traffic, I add layered caching, starting with query-level caching and optionally CDN edge caching for public data. I optimize hot queries with proper indexes and pagination, and I monitor cache hit ratio to avoid stale or ineffective caches. If demand keeps growing, I use read replicas and async refresh patterns to keep response times stable.",
+			"keyPoints": [
+				"measure bottleneck",
+				"layered caching",
+				"query/index optimization and replicas"
+			],
+			"hints": [
+				"Explain stale data tradeoff."
+			],
+			"followUps": [
+				"What metrics prove scaling success?"
+			],
+			"voicePrompt": "How would you scale a read-heavy API?",
+			"difficulty": "advanced"
+		},
+		{
+			"id": "backend-advanced-002",
+			"category": "Reliability",
+			"question": "How do you make background jobs reliable?",
+			"sampleAnswer": "I make each job idempotent so retries do not create duplicate side effects. Then I use explicit retry policies with backoff, dead-letter queues for poison messages, and observability around failure rates and processing latency. Jobs should have clear ownership boundaries and schema validation to reject bad payloads early. Reliability improves when failures are visible, retry-safe, and recoverable without manual database edits.",
+			"keyPoints": [
+				"idempotency",
+				"retries and dead-letter queues",
+				"observability and validation"
+			],
+			"hints": [
+				"Focus on failure handling path."
+			],
+			"followUps": [
+				"When should a job stop retrying?"
+			],
+			"voicePrompt": "How do you build reliable background jobs?",
+			"difficulty": "advanced"
+		},
+		{
+			"id": "backend-advanced-003",
+			"category": "Data Consistency",
+			"question": "How do you keep data consistent across services?",
+			"sampleAnswer": "I avoid distributed transactions by designing clear ownership per service and using event-driven workflows for cross-service updates. For critical flows I use the outbox pattern so state changes and events are recorded atomically at the producer side. Consumers process events idempotently and support replay for recovery. Consistency becomes predictable when contracts are versioned and failure paths are explicitly designed.",
+			"keyPoints": [
+				"service ownership",
+				"outbox pattern",
+				"idempotent consumers and replay"
+			],
+			"hints": [
+				"Mention eventual consistency."
+			],
+			"followUps": [
+				"How do you handle schema evolution?"
+			],
+			"voicePrompt": "How would you maintain consistency in microservices?",
+			"difficulty": "advanced"
+		},
+		{
+			"id": "backend-advanced-004",
+			"category": "Databases",
+			"question": "When do you denormalize data, and what safeguards do you add?",
+			"sampleAnswer": "I denormalize when read performance or query simplicity is more important than strict normalization, especially for high-traffic dashboards. The tradeoff is write complexity and risk of stale copies, so I add clear update paths, version timestamps, and consistency checks. I also document source-of-truth ownership so teams know which field is authoritative. Denormalization is useful when done intentionally with monitoring, not as an accidental shortcut.",
+			"keyPoints": [
+				"read optimization use case",
+				"staleness tradeoff",
+				"consistency safeguards"
+			],
+			"hints": [
+				"State source-of-truth clearly."
+			],
+			"followUps": [
+				"How do you backfill denormalized fields?"
+			],
+			"voicePrompt": "When do you denormalize data?",
+			"difficulty": "advanced"
+		}
+	]
+}

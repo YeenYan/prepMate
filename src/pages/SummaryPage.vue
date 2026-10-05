@@ -19,9 +19,17 @@ const ratingLabel = computed(() => {
   return "Needs work";
 });
 
+function practicePath() {
+  if (!summary.value) return "/";
+  if (summary.value.difficulty) {
+    return `/session/${summary.value.mode}/${summary.value.difficulty}`;
+  }
+  return `/session/${summary.value.mode}`;
+}
+
 function reviewWeakAnswers() {
   if (!summary.value) return;
-  router.push(`/session/${summary.value.mode}`);
+  router.push(practicePath());
 }
 </script>
 
@@ -29,7 +37,12 @@ function reviewWeakAnswers() {
   <section class="space-y-4 pb-26">
     <GlassContainer v-if="summary" class="rounded-[28px] p-5">
       <p class="m-0 text-xs text-[var(--color-text-secondary)]">Assessment summary</p>
-      <h1 class="mb-1 mt-1 text-2xl font-semibold">{{ summary.mode.toUpperCase() }}</h1>
+      <h1 class="mb-1 mt-1 text-2xl font-semibold">
+        {{ summary.mode.toUpperCase()
+        }}<span v-if="summary.difficulty" class="text-base font-medium capitalize">
+          · {{ summary.difficulty }}</span
+        >
+      </h1>
       <div class="mt-3">
         <ScoreRing :score="summary.averageScore" />
       </div>
@@ -69,7 +82,7 @@ function reviewWeakAnswers() {
         <button class="pill-button secondary-button px-3 py-3 text-xs" @click="reviewWeakAnswers">
           Review weak
         </button>
-        <button class="pill-button primary-button px-3 py-3 text-xs font-semibold" @click="router.push(`/session/${summary.mode}`)">
+        <button class="pill-button primary-button px-3 py-3 text-xs font-semibold" @click="router.push(practicePath())">
           Practice again
         </button>
         <button class="pill-button secondary-button px-3 py-3 text-xs" @click="router.push('/')">

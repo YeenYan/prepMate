@@ -1,10 +1,15 @@
 <script setup lang="ts">
 import { computed, onMounted } from "vue";
 import { useRouter } from "vue-router";
-import GlassContainer from "../components/GlassContainer.vue";
+import {
+  ArrowPathIcon,
+  ChartBarIcon,
+  MicrophoneIcon
+} from "@heroicons/vue/24/outline";
+import ModuleSectionsBlock from "../components/ModuleSectionsBlock.vue";
+import ModuleCategoryCard from "../components/ModuleCategoryCard.vue";
 import { useBanksStore } from "../stores/useBanksStore";
 import { useSessionStore } from "../stores/useSessionStore";
-import type { ModeKey } from "../types/interview";
 
 const router = useRouter();
 const banksStore = useBanksStore();
@@ -15,73 +20,68 @@ onMounted(() => {
   sessionStore.hydrateFromStorage();
 });
 
-const cards = computed(() => banksStore.modeCards.filter((card) => card.mode !== "basics"));
 const hasResume = computed(() => Boolean(sessionStore.session));
 const hasSummary = computed(() => Boolean(sessionStore.lastSummary));
+const voiceMockCount = computed(
+  () => banksStore.getBank("frontend", "easy")?.questions.length || 0
+);
 
-function goMode(mode: ModeKey) {
-  router.push(`/mode/${mode}`);
+function resumePath() {
+  const session = sessionStore.session;
+  if (!session) return "/";
+  if (session.difficulty) return `/session/${session.mode}/${session.difficulty}`;
+  return `/session/${session.mode}`;
 }
 </script>
 
 <template>
-  <section class="space-y-4 pb-26">
-    <GlassContainer class="rounded-[28px] p-5">
-      <p class="m-0 text-sm text-[var(--color-text-secondary)]">Welcome</p>
-      <h1 class="mt-1 text-[30px] font-semibold leading-tight">PrepMate</h1>
+  <section class="space-y-8 pb-32 pt-2">
+    <div class="px-0.5 pt-1">
+      <p class="m-0 text-sm text-[var(--color-text-secondary)]">Welcome back</p>
+      <h1 class="mb-0 mt-1 text-[28px] font-semibold leading-tight">PrepMate</h1>
       <p class="mb-0 mt-2 text-sm text-[var(--color-text-secondary)]">
-        Your personal interview practice coach
+        Practice by module and difficulty—same layout as Module settings.
       </p>
-    </GlassContainer>
-
-    <div class="grid grid-cols-1 gap-3">
-      <button
-        v-for="card in cards"
-        :key="card.mode"
-        class="glass rounded-[24px] p-4 text-left"
-        @click="goMode(card.mode)"
-      >
-        <p class="m-0 text-sm text-[var(--color-text-secondary)]">{{ card.description }}</p>
-        <p class="mb-1 mt-2 text-lg font-semibold">{{ card.title }}</p>
-        <p class="m-0 text-xs text-[var(--color-text-secondary)]">{{ card.count }} questions</p>
-      </button>
     </div>
 
     <div class="grid grid-cols-2 gap-3">
-      <button class="glass rounded-[22px] p-4 text-left" @click="goMode('basics')">
-        <p class="m-0 text-base font-semibold">Basic / HR</p>
-        <p class="mb-0 mt-1 text-xs text-[var(--color-text-secondary)]">Salary, intro, conflict</p>
-      </button>
-      <button class="glass rounded-[22px] p-4 text-left" @click="router.push('/mock/easy')">
-        <p class="m-0 text-base font-semibold">Voice mock</p>
-        <p class="mb-0 mt-1 text-xs text-[var(--color-text-secondary)]">Spoken interview coach</p>
-      </button>
-    </div>
-
-    <div class="grid grid-cols-2 gap-3">
-      <button
-        class="glass rounded-[20px] p-4 text-left disabled:opacity-45"
-        :disabled="!hasResume"
-        @click="router.push(`/session/${sessionStore.session?.mode || 'easy'}`)"
-      >
-        <p class="m-0 text-sm font-semibold">Resume session</p>
-        <p class="mb-0 mt-1 text-xs text-[var(--color-text-secondary)]">
-          {{ hasResume ? "Continue where you stopped" : "No active session yet" }}
-        </p>
-      </button>
-      <button
-        class="glass rounded-[20px] p-4 text-left disabled:opacity-45"
+      <ModuleCategoryCard
+        label="VOICE MOCK"
+        :count="voiceMockCount"
+        :icon="MicrophoneIcon"
+        icon-class="bg-indigo-500/20 text-indigo-200"
+        @click="router.push('/mock/frontend/easy')"
+      />
+      <ModuleCategoryCard
+        label="LAST SUMMARY"
+        :count="hasSummary ? sessionStore.lastSummary?.answeredCount || 0 : 0"
+        :icon="ChartBarIcon"
+        icon-class="bg-fuchsia-500/20 text-fuchsia-200"
         :disabled="!hasSummary"
         @click="router.push('/summary/latest')"
-      >
-        <p class="m-0 text-sm font-semibold">Last summary</p>
-        <p class="mb-0 mt-1 text-xs text-[var(--color-text-secondary)]">
-          {{ hasSummary ? `${sessionStore.lastSummary?.averageScore || 0}% average` : "No summary yet" }}
-        </p>
-      </button>
+      />
     </div>
 
-    <p v-if="banksStore.error" class="rounded-2xl bg-red-100 px-4 py-3 text-sm text-red-700">
+    <button
+      type="button"
+      class="module-card flex w-full items-center gap-3 px-4 py-3.5 disabled:opacity-45"
+      :disabled="!hasResume"
+      @click="router.push(resumePath())"
+    >
+      <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-violet-500/20 text-violet-200">
+        <ArrowPathIcon class="h-5 w-5" aria-hidden="true" />
+      </span>
+      <span class="text-left">
+        <p class="m-0 text-sm font-semibold">Resume session</p>
+        <p class="mb-0 mt-0.5 text-xs text-[var(--color-text-secondary)]">
+          {{ hasResume ? "Continue where you stopped" : "No active session yet" }}
+        </p>
+      </span>
+    </button>
+
+    <ModuleSectionsBlock />
+
+    <p v-if="banksStore.error" class="rounded-2xl bg-red-500/15 px-4 py-3 text-sm text-red-300">
       {{ banksStore.error }}
     </p>
   </section>

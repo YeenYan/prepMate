@@ -58,7 +58,7 @@ export function useCoach(knowledge: CoachKnowledge) {
     matches.sort((a, b) => b.score - a.score);
     const top = matches.slice(0, 2);
     if (!top.length) {
-      return "I do not have that in my notes yet. Add it to basics.json for HR topics or to easy/intermediate/advanced for technical topics, then I can coach from it.";
+      return "I do not have that in my notes yet. Add it to basics.json for HR topics or to frontend/backend/infrastructure/scenario.json for technical topics, then I can coach from it.";
     }
 
     const lines = top.map(

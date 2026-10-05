@@ -1,0 +1,102 @@
+{
+	"mode": "infrastructure",
+	"title": "Infrastructure",
+	"description": "Git, tooling, observability, and delivery interview questions. Pick a difficulty to practice.",
+	"questions": [
+		{
+			"id": "infra-easy-001",
+			"category": "Git",
+			"question": "What does git rebase do?",
+			"sampleAnswer": "git rebase reapplies my commits on top of another base commit so history looks linear. I use it to keep feature branches up to date with main before opening a pull request. The key difference from merge is that rebase rewrites commit hashes, while merge creates a merge commit. I avoid rebasing shared branches that others already pulled to prevent history conflicts.",
+			"keyPoints": [
+				"reapply commits",
+				"linear history",
+				"rewrites hashes"
+			],
+			"hints": [
+				"Contrast with merge."
+			],
+			"followUps": [
+				"When is merge a better choice?"
+			],
+			"voicePrompt": "What does git rebase do?",
+			"difficulty": "easy"
+		},
+		{
+			"id": "infra-easy-002",
+			"category": "Git",
+			"question": "How do you handle version control and collaboration using Git?",
+			"sampleAnswer": "I work on short-lived feature branches, commit in small focused chunks, and open a pull request with a clear description of why the change exists. I keep history readable with rebase or merge depending on team convention, and I never rewrite shared branches. In review I respond to comments, run the agreed checks, and squash or keep commits based on what the team prefers. Collaboration works when branches stay small and communication stays in the PR.",
+			"keyPoints": [
+				"feature branches and small commits",
+				"reviewable pull requests",
+				"do not rewrite shared history"
+			],
+			"hints": [
+				"Walk through a normal feature workflow."
+			],
+			"followUps": [
+				"How do you resolve a merge conflict safely?"
+			],
+			"voicePrompt": "How do you use Git to collaborate with a team?",
+			"difficulty": "easy"
+		},
+		{
+			"id": "infra-easy-003",
+			"category": "Tooling",
+			"question": "Explain the difference between npm and yarn.",
+			"sampleAnswer": "Both are JavaScript package managers that install dependencies from the same registry in most projects. npm ships with Node and uses package-lock.json, while Yarn started as a faster alternative with yarn.lock and features like workspaces. In practice I follow whatever the repo already uses so lockfiles stay consistent. The important part is committing the lockfile and using the same installer as the rest of the team.",
+			"keyPoints": [
+				"same job different lockfiles",
+				"follow the repo convention",
+				"lockfile consistency"
+			],
+			"hints": [
+				"Do not oversell speed as the only difference."
+			],
+			"followUps": [
+				"What happens if two people use different package managers on one repo?"
+			],
+			"voicePrompt": "What is the difference between npm and yarn?",
+			"difficulty": "easy"
+		},
+		{
+			"id": "infra-intermediate-001",
+			"category": "Version Control",
+			"question": "How do you keep pull requests reviewable?",
+			"sampleAnswer": "I keep changes scoped to one problem, write a clear description of what changed and why, and avoid mixing refactors with feature logic unless necessary. I also include screenshots or recordings for UI changes and call out testing steps. Smaller pull requests get faster, higher-quality reviews and reduce merge conflicts. If work is large, I split it into sequential PRs.",
+			"keyPoints": [
+				"single-purpose PRs",
+				"clear context",
+				"include verification evidence"
+			],
+			"hints": [
+				"Mention splitting large work."
+			],
+			"followUps": [
+				"How do you handle urgent hotfixes?"
+			],
+			"voicePrompt": "How do you make PRs easy to review?",
+			"difficulty": "intermediate"
+		},
+		{
+			"id": "infra-advanced-001",
+			"category": "Observability",
+			"question": "What does good observability look like for a web platform?",
+			"sampleAnswer": "Good observability combines logs, metrics, and traces that are correlated by request or session identifiers. I define service-level indicators for user-facing outcomes, not just infrastructure health, and set actionable alerts with clear runbooks. Dashboards should show leading indicators like error spikes, latency percentiles, and saturation trends. The goal is fast diagnosis and confident recovery, not collecting data with no operating plan.",
+			"keyPoints": [
+				"logs metrics traces together",
+				"user-focused SLIs",
+				"actionable alerts and runbooks"
+			],
+			"hints": [
+				"Mention correlation IDs."
+			],
+			"followUps": [
+				"How do you reduce alert fatigue?"
+			],
+			"voicePrompt": "Describe strong observability practices.",
+			"difficulty": "advanced"
+		}
+	]
+}

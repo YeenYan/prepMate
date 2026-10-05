@@ -6,7 +6,8 @@ import ScoreRing from "../components/ScoreRing.vue";
 import { useSpeech } from "../composables/useSpeech";
 import { useBanksStore } from "../stores/useBanksStore";
 import { useSessionStore } from "../stores/useSessionStore";
-import type { ModeKey } from "../types/interview";
+import type { DifficultyKey, ModeKey } from "../types/interview";
+import { isDifficultyKey, isModeKey } from "../types/interview";
 
 const route = useRoute();
 const router = useRouter();
@@ -20,13 +21,18 @@ const localError = ref("");
 
 const mode = computed<ModeKey | null>(() => {
   const value = String(route.params.mode || "");
-  if (value === "easy" || value === "intermediate" || value === "advanced" || value === "basics") {
-    return value;
-  }
-  return null;
+  return isModeKey(value) ? value : null;
 });
 
-const bank = computed(() => (mode.value ? banksStore.getBank(mode.value) : null));
+const difficulty = computed<DifficultyKey | undefined>(() => {
+  const value = String(route.params.difficulty || "");
+  if (!value) return undefined;
+  return isDifficultyKey(value) ? value : undefined;
+});
+
+const bank = computed(() =>
+  mode.value ? banksStore.getBank(mode.value, difficulty.value) : null
+);
 const progressText = computed(() => {
   const current = sessionStore.session?.currentIndex ?? 0;
   const total = sessionStore.session?.queue.length ?? 0;
@@ -53,6 +59,14 @@ onMounted(() => {
     localError.value = "Invalid mode.";
     return;
   }
+  if (mode.value !== "basics" && !difficulty.value) {
+    localError.value = "Pick a difficulty from the mode lobby.";
+    return;
+  }
+  if (route.params.difficulty && !difficulty.value) {
+    localError.value = "Invalid difficulty.";
+    return;
+  }
   if (!bank.value) {
     localError.value = banksStore.error || "Question bank failed to load.";
     return;
@@ -61,10 +75,14 @@ onMounted(() => {
     localError.value = "No questions in this JSON yet.";
     return;
   }
-  if (sessionStore.session?.mode === mode.value && sessionStore.session.status !== "completed") {
+  if (
+    sessionStore.session?.mode === mode.value &&
+    sessionStore.session.difficulty === difficulty.value &&
+    sessionStore.session.status !== "completed"
+  ) {
     return;
   }
-  sessionStore.start(mode.value, bank.value);
+  sessionStore.start(mode.value, bank.value, difficulty.value);
 });
 
 function mergeTranscriptIntoAnswer() {
@@ -121,7 +139,7 @@ function stopAssessment() {
         <span
           v-for="tag in currentQuestion.tags"
           :key="tag"
-          class="rounded-full bg-white/70 px-2 py-1 text-[11px] text-[var(--color-text-secondary)]"
+          class="rounded-full bg-white/10 px-2 py-1 text-[11px] text-[var(--color-text-secondary)]"
         >
           {{ tag }}
         </span>
@@ -199,7 +217,7 @@ function stopAssessment() {
       </div>
     </GlassContainer>
 
-    <p v-if="localError || banksStore.error" class="rounded-2xl bg-red-100 px-4 py-3 text-sm text-red-700">
+    <p v-if="localError || banksStore.error" class="rounded-2xl bg-red-500/15 px-4 py-3 text-sm text-red-300">
       {{ localError || banksStore.error }}
     </p>
 

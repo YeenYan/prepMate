@@ -1,26 +1,27 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-  --color-bg: #fbfbff;
-  --color-bg-body: #f6f4ff;
-  --color-surface: #ffffff;
-  --color-text-primary: #17151f;
-  --color-text-secondary: #676179;
-  --color-accent: #7f73dc;
-  --color-accent-2: #68c8f7;
-  --color-accent-3: #f8a7d9;
-  --color-border: rgb(127 115 220 / 0.18);
-  --color-success: #22c55e;
+  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", system-ui, sans-serif;
+  --color-bg: #0b0714;
+  --color-bg-body: #0e0a18;
+  --color-surface: #141022;
+  --color-text-primary: #f4f1fb;
+  --color-text-secondary: #a79fbe;
+  --color-accent: #a855f7;
+  --color-accent-2: #7c5cff;
+  --color-accent-3: #e879f9;
+  --color-border: rgb(255 255 255 / 0.1);
+  --color-success: #2dd4bf;
   --color-warning: #f59e0b;
-  --color-danger: #ef4444;
-  --color-muted: #928ca5;
-  --color-glass-bg: rgb(255 255 255 / 0.72);
-  --color-glass-border: rgb(255 255 255 / 0.8);
+  --color-danger: #f43f5e;
+  --color-muted: #8b849e;
+  --color-glass-bg: rgb(28 22 48 / 0.62);
+  --color-glass-border: rgb(255 255 255 / 0.12);
   --shadow-glass:
-    0 12px 36px rgb(78 37 134 / 0.12),
-    inset 0 1px 0 rgb(255 255 255 / 0.9);
+    0 16px 40px rgb(0 0 0 / 0.35),
+    inset 0 1px 0 rgb(255 255 255 / 0.08);
 }
 
 :root {
-  --gradient-primary: linear-gradient(120deg, #68c8f7 0%, #9b8af0 55%, #f8a7d9 100%);
+  --gradient-primary: linear-gradient(120deg, #7c4dff 0%, #a855f7 55%, #d946ef 100%);
 }

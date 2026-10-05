@@ -8,6 +8,7 @@ import HomePage from "./pages/HomePage.vue";
 import ModeLobbyPage from "./pages/ModeLobbyPage.vue";
 import SessionPage from "./pages/SessionPage.vue";
 import SummaryPage from "./pages/SummaryPage.vue";
+import ModulePage from "./pages/ModulePage.vue";
 import VoiceMockPage from "./pages/VoiceMockPage.vue";
 import "./styles/main.css";
 
@@ -16,10 +17,11 @@ const router = createRouter({
   routes: [
     { path: "/", component: HomePage },
     { path: "/mode/:mode", component: ModeLobbyPage },
-    { path: "/session/:mode", component: SessionPage },
-    { path: "/mock/:mode", component: VoiceMockPage },
+    { path: "/session/:mode/:difficulty?", component: SessionPage },
+    { path: "/mock/:mode/:difficulty?", component: VoiceMockPage },
     { path: "/summary/:sessionId", component: SummaryPage },
-    { path: "/coach", component: CoachPage }
+    { path: "/coach", component: CoachPage },
+    { path: "/module", component: ModulePage }
   ]
 });
 

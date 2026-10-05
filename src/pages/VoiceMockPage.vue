@@ -8,7 +8,8 @@ import { useSpeech } from "../composables/useSpeech";
 import { useBanksStore } from "../stores/useBanksStore";
 import { useCoachStore } from "../stores/useCoachStore";
 import { useSessionStore } from "../stores/useSessionStore";
-import type { ModeKey } from "../types/interview";
+import type { DifficultyKey, ModeKey } from "../types/interview";
+import { isDifficultyKey, isModeKey, MODE_KEYS } from "../types/interview";
 
 const route = useRoute();
 const router = useRouter();
@@ -23,13 +24,18 @@ const scoreToShow = ref(0);
 
 const mode = computed<ModeKey | null>(() => {
   const value = String(route.params.mode || "");
-  if (value === "easy" || value === "intermediate" || value === "advanced" || value === "basics") {
-    return value;
-  }
-  return null;
+  return isModeKey(value) ? value : null;
 });
 
-const bank = computed(() => (mode.value ? banksStore.getBank(mode.value) : null));
+const difficulty = computed<DifficultyKey | undefined>(() => {
+  const value = String(route.params.difficulty || "");
+  if (!value) return undefined;
+  return isDifficultyKey(value) ? value : undefined;
+});
+
+const bank = computed(() =>
+  mode.value ? banksStore.getBank(mode.value, difficulty.value) : null
+);
 const currentQuestion = computed(() => sessionStore.currentQuestion);
 
 const coachRuntime = computed(() => {
@@ -54,9 +60,14 @@ onMounted(() => {
   coachStore.clearTurns();
 
   if (!mode.value || !bank.value || !banksStore.coach || !bank.value.questions.length) return;
+  if (mode.value !== "basics" && !difficulty.value) return;
 
-  if (!sessionStore.session || sessionStore.session.mode !== mode.value) {
-    sessionStore.start(mode.value, bank.value);
+  if (
+    !sessionStore.session ||
+    sessionStore.session.mode !== mode.value ||
+    sessionStore.session.difficulty !== difficulty.value
+  ) {
+    sessionStore.start(mode.value, bank.value, difficulty.value);
   }
   speakCoach(banksStore.coach.persona.greeting);
   askCurrentQuestion();
@@ -133,12 +144,10 @@ function askCoachInChat() {
   if (!chatInput.value.trim() || !coachRuntime.value || !banksStore.banks) return;
   const question = chatInput.value.trim();
   coachStore.addTurn("user", question);
-  const response = coachRuntime.value.answerCoachChat(question, [
-    banksStore.banks.easy,
-    banksStore.banks.intermediate,
-    banksStore.banks.advanced,
-    banksStore.banks.basics
-  ]);
+  const response = coachRuntime.value.answerCoachChat(
+    question,
+    MODE_KEYS.map((key) => banksStore.banks![key])
+  );
   coachStore.addTurn("coach", response);
   chatInput.value = "";
 }
@@ -192,7 +201,7 @@ function askCoachInChat() {
           class="rounded-2xl px-3 py-2 text-sm"
           :class="
             turn.role === 'coach'
-              ? 'bg-white/85 text-[var(--color-text-primary)]'
+              ? 'bg-white/10 text-[var(--color-text-primary)]'
               : 'ml-6 bg-[var(--color-accent)]/20 text-[var(--color-text-primary)]'
           "
         >

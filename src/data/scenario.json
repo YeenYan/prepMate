@@ -1,0 +1,178 @@
+{
+	"mode": "scenario",
+	"title": "Scenario Based",
+	"description": "System design, debugging, and situational interview questions. Pick a difficulty to practice.",
+	"questions": [
+		{
+			"id": "scenario-easy-001",
+			"category": "Problem Solving",
+			"question": "How do you approach debugging a bug report?",
+			"sampleAnswer": "I start by reproducing the issue reliably and clarifying expected versus actual behavior. Then I isolate scope by checking logs, recent changes, and the smallest failing path. After identifying likely root causes, I test one hypothesis at a time instead of changing many things at once. Once fixed, I add a regression test and document the cause so the team can avoid repeating it.",
+			"keyPoints": [
+				"reproduce first",
+				"isolate root cause",
+				"test and prevent regression"
+			],
+			"hints": [
+				"Show a step-by-step method."
+			],
+			"followUps": [
+				"What if you cannot reproduce locally?"
+			],
+			"voicePrompt": "Describe your debugging process.",
+			"difficulty": "easy"
+		},
+		{
+			"id": "scenario-intermediate-001",
+			"category": "Behavioral",
+			"question": "Tell me about a time you improved code quality in a team.",
+			"sampleAnswer": "In one project we had frequent regressions after feature releases, so I proposed adding a lightweight quality checklist and shared lint rules for pull requests. I worked with teammates to add focused tests around the most fragile areas and created clear ownership for review. Within a few sprints our post-release bug rate dropped and confidence increased. The key lesson was improving process with the team, not forcing a heavy framework.",
+			"keyPoints": [
+				"problem context",
+				"specific actions",
+				"measurable result"
+			],
+			"hints": [
+				"Use STAR structure."
+			],
+			"followUps": [
+				"What resistance did you face?"
+			],
+			"voicePrompt": "Share a time you improved team code quality.",
+			"difficulty": "intermediate"
+		},
+		{
+			"id": "scenario-intermediate-002",
+			"category": "Problem Solving",
+			"question": "A bug only appears in production. What do you do first?",
+			"sampleAnswer": "First, I gather production evidence: logs, timestamps, affected routes, and browser versions to identify a pattern. Then I create the closest local reproduction with the same environment flags and data shape. I avoid blind fixes and instead test hypotheses in small steps until the root cause is clear. Once patched, I add monitoring and regression coverage so we can detect similar issues earlier.",
+			"keyPoints": [
+				"collect evidence",
+				"reproduce with parity",
+				"fix with validation"
+			],
+			"hints": [
+				"Avoid guessing as a strategy."
+			],
+			"followUps": [
+				"How do feature flags help here?"
+			],
+			"voicePrompt": "How do you tackle production-only bugs?",
+			"difficulty": "intermediate"
+		},
+		{
+			"id": "scenario-intermediate-003",
+			"category": "Communication",
+			"question": "How do you explain a technical tradeoff to non-technical stakeholders?",
+			"sampleAnswer": "I frame options by user impact, risk, delivery time, and long-term cost instead of deep implementation details. Then I recommend one option with a clear reason and what we give up by not choosing the others. I use plain language and concrete examples so stakeholders can make informed decisions quickly. The goal is alignment, not showing technical depth.",
+			"keyPoints": [
+				"focus on impact and risk",
+				"recommend with rationale",
+				"use plain language"
+			],
+			"hints": [
+				"Show decision clarity."
+			],
+			"followUps": [
+				"How do you handle disagreement?"
+			],
+			"voicePrompt": "How do you explain technical tradeoffs simply?",
+			"difficulty": "intermediate"
+		},
+		{
+			"id": "scenario-advanced-001",
+			"category": "System Design",
+			"question": "Design a high-level architecture for a real-time collaboration editor.",
+			"sampleAnswer": "I would separate the system into a low-latency collaboration layer and a durable storage layer. Clients connect to a realtime gateway using WebSocket, and edits are represented as operations that are transformed or merged using CRDT or operational transform rules. A message broker fans updates to connected users while a document service snapshots state periodically to persistent storage. I would also include presence service, permission checks, and conflict recovery to support reconnection and eventual consistency.",
+			"keyPoints": [
+				"realtime gateway",
+				"conflict resolution strategy",
+				"durable snapshots and permissions"
+			],
+			"hints": [
+				"Structure by components first."
+			],
+			"followUps": [
+				"How do you handle offline edits?"
+			],
+			"voicePrompt": "Design a realtime collaboration editor at a high level.",
+			"difficulty": "advanced"
+		},
+		{
+			"id": "scenario-advanced-002",
+			"category": "Security",
+			"question": "How do you approach threat modeling for a new feature?",
+			"sampleAnswer": "I map assets, entry points, trust boundaries, and attacker goals before writing mitigation tasks. Then I run a lightweight STRIDE-style pass to identify spoofing, tampering, data exposure, and privilege risks in each flow step. I prioritize mitigations by impact and exploitability, then convert them into engineering requirements, tests, and monitoring alerts. Threat modeling is effective when it drives concrete implementation changes, not just a document.",
+			"keyPoints": [
+				"assets and trust boundaries",
+				"structured risk analysis",
+				"actionable mitigations"
+			],
+			"hints": [
+				"Tie risks to controls."
+			],
+			"followUps": [
+				"How often should threat models be updated?"
+			],
+			"voicePrompt": "Explain your threat modeling process.",
+			"difficulty": "advanced"
+		},
+		{
+			"id": "scenario-advanced-003",
+			"category": "Leadership",
+			"question": "How do you lead a technically complex project with uncertain requirements?",
+			"sampleAnswer": "I start by defining a thin vertical slice that validates core assumptions quickly, then evolve requirements based on evidence. I keep risks visible in a decision log and break delivery into milestones with explicit exit criteria. Communication cadence matters, so I run regular checkpoints with engineering and product to resolve ambiguity early. This keeps momentum while avoiding expensive overbuild on assumptions.",
+			"keyPoints": [
+				"validate assumptions early",
+				"risk and decision tracking",
+				"regular alignment"
+			],
+			"hints": [
+				"Use milestone language."
+			],
+			"followUps": [
+				"How do you protect team morale in uncertainty?"
+			],
+			"voicePrompt": "How do you lead uncertain technical projects?",
+			"difficulty": "advanced"
+		},
+		{
+			"id": "scenario-advanced-004",
+			"category": "System Design",
+			"question": "How would you design a notification system that supports retries and user preferences?",
+			"sampleAnswer": "I would separate event ingestion, delivery orchestration, and channel providers like email or push. User preferences are checked before enqueueing each channel task to avoid unwanted notifications. Delivery tasks are retryable with exponential backoff and dead-letter handling, and each attempt is logged for traceability. A status store tracks sent, failed, and suppressed events so both users and support teams can audit outcomes.",
+			"keyPoints": [
+				"separate ingestion and delivery",
+				"respect preferences",
+				"retry and auditability"
+			],
+			"hints": [
+				"Show channel-agnostic design."
+			],
+			"followUps": [
+				"How do you avoid duplicate sends?"
+			],
+			"voicePrompt": "Design a robust notification system.",
+			"difficulty": "advanced"
+		},
+		{
+			"id": "scenario-advanced-005",
+			"category": "Tradeoffs",
+			"question": "How do you decide build vs buy for an internal platform tool?",
+			"sampleAnswer": "I evaluate strategic fit, total cost of ownership, security requirements, and how differentiated the capability is for our team. If a tool is commodity and reliable, buying often saves time and support burden. If deep customization, data residency, or integration control is critical, building can be justified despite higher upfront cost. I present both options with risks and revisit the decision when constraints change.",
+			"keyPoints": [
+				"cost and strategic fit",
+				"commodity vs differentiation",
+				"revisit decision over time"
+			],
+			"hints": [
+				"Frame with business and technical factors."
+			],
+			"followUps": [
+				"What hidden costs are often missed?"
+			],
+			"voicePrompt": "How do you choose build versus buy?",
+			"difficulty": "advanced"
+		}
+	]
+}

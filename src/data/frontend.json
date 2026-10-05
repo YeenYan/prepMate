@@ -1,0 +1,900 @@
+{
+	"mode": "frontend",
+	"title": "Frontend",
+	"description": "UI, browser, framework, and client-side interview questions. Pick a difficulty to practice.",
+	"questions": [
+		{
+			"id": "frontend-easy-001",
+			"category": "JavaScript",
+			"question": "What is the difference between let, const, and var?",
+			"sampleAnswer": "I explain it in three parts: scope, reassignment, and hoisting behavior. var is function-scoped and can be redeclared, which often causes accidental overwrites. let and const are block-scoped, so they are safer inside loops and conditionals. let can be reassigned, while const cannot be reassigned after initialization. In modern code I default to const, use let when a value must change, and avoid var to reduce bugs.",
+			"keyPoints": [
+				"scope differences",
+				"redeclare vs reassign",
+				"prefer const and let"
+			],
+			"hints": [
+				"Start with scope, then assignment rules."
+			],
+			"followUps": [
+				"When would using let be better than const?"
+			],
+			"voicePrompt": "Tell me the difference between let, const, and var.",
+			"difficulty": "easy"
+		},
+		{
+			"id": "frontend-easy-002",
+			"category": "JavaScript",
+			"question": "What is a closure in JavaScript?",
+			"sampleAnswer": "A closure happens when a function keeps access to variables from its outer scope even after that outer function has finished running. I use closures when I want private state, like counters or memoized functions, without exposing variables globally. For example, a function can return another function that increments an internal variable each call. That internal value stays available because the returned function closes over it.",
+			"keyPoints": [
+				"function remembers outer scope",
+				"private state",
+				"practical example"
+			],
+			"hints": [
+				"Use the counter example."
+			],
+			"followUps": [
+				"How can closures cause memory issues?"
+			],
+			"voicePrompt": "What is a closure in JavaScript?",
+			"difficulty": "easy"
+		},
+		{
+			"id": "frontend-easy-003",
+			"category": "TypeScript",
+			"question": "Why use TypeScript instead of plain JavaScript?",
+			"sampleAnswer": "I use TypeScript because it catches many mistakes before runtime and improves maintainability. Static types make contracts between functions and components clear, which helps team collaboration. Editors also provide better autocomplete and refactoring support, so productivity goes up in larger codebases. I still run the app normally as JavaScript, but TypeScript gives me safer development feedback earlier.",
+			"keyPoints": [
+				"static checks",
+				"maintainability",
+				"better tooling"
+			],
+			"hints": [
+				"Mention runtime safety and team clarity."
+			],
+			"followUps": [
+				"What are drawbacks of TypeScript?"
+			],
+			"voicePrompt": "Why do you choose TypeScript?",
+			"difficulty": "easy"
+		},
+		{
+			"id": "frontend-easy-004",
+			"category": "CSS",
+			"question": "What is the box model in CSS?",
+			"sampleAnswer": "The CSS box model describes how element size is calculated using content, padding, border, and margin. Content is the inner area where text or media appears. Padding adds space inside the border, border surrounds padding and content, and margin adds space outside the element. I usually set box-sizing to border-box so width and height include padding and border, which makes layouts easier to reason about.",
+			"keyPoints": [
+				"content padding border margin",
+				"sizing behavior",
+				"border-box usage"
+			],
+			"hints": [
+				"Mention default vs border-box."
+			],
+			"followUps": [
+				"How does margin collapsing work?"
+			],
+			"voicePrompt": "Explain the CSS box model.",
+			"difficulty": "easy"
+		},
+		{
+			"id": "frontend-easy-005",
+			"category": "Vue",
+			"question": "What is the purpose of reactive state in Vue?",
+			"sampleAnswer": "Reactive state lets the UI update automatically when data changes. Instead of manually touching the DOM, I change state and Vue tracks dependencies, then re-renders the needed parts efficiently. In Composition API I use ref for primitive values and reactive for object-like state. This model makes components predictable because rendering always reflects the current state.",
+			"keyPoints": [
+				"automatic UI updates",
+				"dependency tracking",
+				"ref and reactive"
+			],
+			"hints": [
+				"Explain one-way data flow quickly."
+			],
+			"followUps": [
+				"When do you prefer computed over methods?"
+			],
+			"voicePrompt": "Why is reactive state important in Vue?",
+			"difficulty": "easy"
+		},
+		{
+			"id": "frontend-easy-006",
+			"category": "Web Performance",
+			"question": "Name two quick ways to improve frontend performance.",
+			"sampleAnswer": "First, I reduce JavaScript bundle size through code splitting and removing unused dependencies, because smaller bundles load faster. Second, I optimize images by using modern formats and appropriate sizes for each viewport. I also watch caching headers and lazy-load non-critical UI sections, but if I only pick two, bundle size and image optimization usually give the fastest wins.",
+			"keyPoints": [
+				"reduce bundle size",
+				"optimize images",
+				"lazy load optional"
+			],
+			"hints": [
+				"Choose practical examples."
+			],
+			"followUps": [
+				"How do you measure impact?"
+			],
+			"voicePrompt": "Give two fast frontend performance improvements.",
+			"difficulty": "easy"
+		},
+		{
+			"id": "frontend-easy-007",
+			"category": "Testing",
+			"question": "What is the difference between unit and integration tests?",
+			"sampleAnswer": "Unit tests verify a small piece of logic in isolation, usually a function or component behavior with dependencies mocked. Integration tests verify that multiple parts work together, such as a component with a real store or API layer mock server. I rely on unit tests for fast feedback and integration tests for confidence in actual user flows. A healthy project usually uses both.",
+			"keyPoints": [
+				"isolation vs collaboration",
+				"mocking differences",
+				"both are useful"
+			],
+			"hints": [
+				"Tie each test type to confidence level."
+			],
+			"followUps": [
+				"Where do end-to-end tests fit?"
+			],
+			"voicePrompt": "Differentiate unit and integration tests.",
+			"difficulty": "easy"
+		},
+		{
+			"id": "frontend-easy-008",
+			"category": "Accessibility",
+			"question": "Why are semantic HTML elements important?",
+			"sampleAnswer": "Semantic HTML gives meaning to structure, which helps screen readers, keyboard navigation, and search engines understand content correctly. For example, using button for actions and nav for navigation is better than generic div elements with click handlers. It also reduces custom ARIA work because many semantics are built in. I treat semantic markup as the first step of accessible UI.",
+			"keyPoints": [
+				"assistive technology",
+				"correct element choice",
+				"less ARIA complexity"
+			],
+			"hints": [
+				"Mention keyboard and screen readers."
+			],
+			"followUps": [
+				"When should ARIA be added?"
+			],
+			"voicePrompt": "Why does semantic HTML matter?",
+			"difficulty": "easy"
+		},
+		{
+			"id": "frontend-easy-009",
+			"category": "JavaScript",
+			"question": "What is event bubbling?",
+			"sampleAnswer": "Event bubbling means an event starts at the target element and then propagates upward through its parent elements. If I click a button inside a card, both button and card listeners can run unless propagation is stopped. I use this behavior for event delegation on lists to reduce many individual listeners. When needed, I call stopPropagation carefully to prevent unwanted parent handlers.",
+			"keyPoints": [
+				"event travels upward",
+				"parent handlers can trigger",
+				"delegation use case"
+			],
+			"hints": [
+				"Give one click example."
+			],
+			"followUps": [
+				"What is event capturing?"
+			],
+			"voicePrompt": "Explain event bubbling.",
+			"difficulty": "easy"
+		},
+		{
+			"id": "frontend-easy-010",
+			"category": "Security",
+			"question": "What is XSS and how do you prevent it?",
+			"sampleAnswer": "XSS, or cross-site scripting, happens when untrusted input is treated as executable script in the browser. I prevent it by escaping or sanitizing user-generated content, avoiding unsafe HTML injection, and using framework defaults that auto-escape templates. I also enforce a strong Content Security Policy to limit script sources. Prevention is best done in both frontend rendering and backend validation.",
+			"keyPoints": [
+				"untrusted script injection",
+				"escape or sanitize input",
+				"CSP and validation"
+			],
+			"hints": [
+				"Mention avoiding dangerous HTML APIs."
+			],
+			"followUps": [
+				"What is stored vs reflected XSS?"
+			],
+			"voicePrompt": "What is XSS and how do you avoid it?",
+			"difficulty": "easy"
+		},
+		{
+			"id": "frontend-easy-011",
+			"category": "JavaScript",
+			"question": "How do you handle asynchronous code using async/await and Promises?",
+			"sampleAnswer": "I treat Promises as the base model: a value that will resolve or reject later. async/await is syntax on top of Promises, so I can write sequential async steps that are easier to read than long then chains. I always wrap awaited calls in try/catch, and I use Promise.all when independent requests can run in parallel. I also avoid mixing forgotten awaits with fire-and-forget calls unless I intentionally handle the result elsewhere.",
+			"keyPoints": [
+				"Promises are the foundation",
+				"async/await for readable sequential flow",
+				"try/catch and Promise.all"
+			],
+			"hints": [
+				"Mention error handling and parallel work."
+			],
+			"followUps": [
+				"When would you use Promise.allSettled instead?"
+			],
+			"voicePrompt": "How do you handle async code with Promises and async await?",
+			"difficulty": "easy"
+		},
+		{
+			"id": "frontend-easy-012",
+			"category": "Vue",
+			"question": "Explain the difference between props and reactive state in Vue.",
+			"sampleAnswer": "Props are data passed down from a parent and should be treated as read-only in the child. Reactive state, like ref or reactive, belongs to the component and can change in response to user actions or local logic. I use props to configure a child and emit events when the child needs to request a change. This keeps one-way data flow clear and avoids hard-to-debug shared mutations.",
+			"keyPoints": [
+				"props are parent-owned and read-only",
+				"state is local and mutable",
+				"emit instead of mutating props"
+			],
+			"hints": [
+				"Contrast ownership of the data."
+			],
+			"followUps": [
+				"When would you use v-model on a child component?"
+			],
+			"voicePrompt": "What is the difference between props and state in Vue?",
+			"difficulty": "easy"
+		},
+		{
+			"id": "frontend-easy-013",
+			"category": "Vue",
+			"question": "Explain the difference between Options API and Composition API in Vue.",
+			"sampleAnswer": "Options API organizes a component by options like data, methods, and computed, which is easy to learn for smaller components. Composition API groups logic by feature using setup, refs, and composables, which scales better when one component has several concerns. I prefer Composition API for reusable logic and TypeScript-friendly code. I can still read Options API code, but I default to Composition API in new work.",
+			"keyPoints": [
+				"Options groups by option type",
+				"Composition groups by feature",
+				"composables and TypeScript fit"
+			],
+			"hints": [
+				"Explain organization, not just syntax."
+			],
+			"followUps": [
+				"When is Options API still a good choice?"
+			],
+			"voicePrompt": "Compare Options API and Composition API in Vue.",
+			"difficulty": "easy"
+		},
+		{
+			"id": "frontend-easy-014",
+			"category": "CSS",
+			"question": "Explain CSS Grid vs Flexbox and when to use each.",
+			"sampleAnswer": "Flexbox is one-dimensional, so I use it for rows or columns like nav bars, button groups, and aligning items inside a card. Grid is two-dimensional, so I use it for page layouts with rows and columns at the same time. They work well together: Grid for the overall structure and Flexbox for alignment inside cells. I pick based on whether I need to control one axis or a full layout.",
+			"keyPoints": [
+				"Flexbox is one-dimensional",
+				"Grid is two-dimensional",
+				"often used together"
+			],
+			"hints": [
+				"Give one example for each."
+			],
+			"followUps": [
+				"When would you still use floats or positioning?"
+			],
+			"voicePrompt": "When do you use CSS Grid versus Flexbox?",
+			"difficulty": "easy"
+		},
+		{
+			"id": "frontend-easy-015",
+			"category": "CSS",
+			"question": "How do you implement responsive design in modern web apps?",
+			"sampleAnswer": "I start mobile-first with fluid layouts using percentages, flex, or grid, then add breakpoints only where the design actually breaks. I use relative units, flexible images, and clamp for typography so type scales without many media queries. I also test common phone and desktop widths and keep touch targets large enough. The goal is one layout system that adapts, not separate sites.",
+			"keyPoints": [
+				"mobile-first breakpoints",
+				"fluid layout and relative units",
+				"test real viewports"
+			],
+			"hints": [
+				"Mention fluid layout before listing breakpoints."
+			],
+			"followUps": [
+				"How do you handle a component that needs a different mobile structure?"
+			],
+			"voicePrompt": "How do you implement responsive design?",
+			"difficulty": "easy"
+		},
+		{
+			"id": "frontend-easy-016",
+			"category": "Debugging",
+			"question": "How do you debug JavaScript and Vue applications effectively?",
+			"sampleAnswer": "I reproduce the issue first, then use browser DevTools to inspect network calls, console errors, and Vue component state with Vue DevTools. I add targeted logs or breakpoints around the failing data path instead of guessing. For reactivity bugs I check whether I mutated a ref incorrectly or expected a computed to update. After I find the cause I confirm the fix and remove leftover debug code.",
+			"keyPoints": [
+				"reproduce then inspect",
+				"DevTools and Vue DevTools",
+				"verify the fix"
+			],
+			"hints": [
+				"Mention both browser tools and Vue DevTools."
+			],
+			"followUps": [
+				"How do you debug a production-only issue?"
+			],
+			"voicePrompt": "How do you debug JavaScript and Vue apps?",
+			"difficulty": "easy"
+		},
+		{
+			"id": "frontend-intermediate-001",
+			"category": "JavaScript",
+			"question": "How does the event loop handle microtasks and macrotasks?",
+			"sampleAnswer": "I think of it as a queue priority model. Synchronous code runs first, then the runtime processes microtasks like Promise callbacks before moving to the next macrotask such as setTimeout. That is why Promise.then often executes before a zero-delay timeout. Understanding this helps me avoid race conditions in UI updates and asynchronous state handling.",
+			"keyPoints": [
+				"sync first",
+				"microtasks before macrotasks",
+				"Promise then vs setTimeout"
+			],
+			"hints": [
+				"Define both queue types clearly."
+			],
+			"followUps": [
+				"Where does requestAnimationFrame fit?"
+			],
+			"voicePrompt": "Explain microtasks and macrotasks in the event loop.",
+			"difficulty": "intermediate"
+		},
+		{
+			"id": "frontend-intermediate-002",
+			"category": "Vue",
+			"question": "When would you use a composable in Vue?",
+			"sampleAnswer": "I create a composable when logic is reused across multiple components or when a concern should stay independent from UI markup. Good examples are speech handling, API polling, and local storage sync. A composable keeps stateful logic in one place and improves testability because I can validate behavior without rendering the full page. I keep composables focused and avoid turning them into huge utility dumps.",
+			"keyPoints": [
+				"reusable stateful logic",
+				"decouple logic from UI",
+				"keep scope focused"
+			],
+			"hints": [
+				"Give concrete examples."
+			],
+			"followUps": [
+				"When is a simple helper function enough?"
+			],
+			"voicePrompt": "When do you write a Vue composable?",
+			"difficulty": "intermediate"
+		},
+		{
+			"id": "frontend-intermediate-003",
+			"category": "API Design",
+			"question": "How do you design a resilient frontend API call flow?",
+			"sampleAnswer": "I start with explicit request states: loading, success, and error, then add retries only for safe and transient failures. I set request timeouts, handle cancellation for stale views, and show clear user feedback when something fails. For critical actions I use idempotent endpoints or request IDs so duplicate submissions do not create duplicate records. This approach keeps the UI responsive and reduces inconsistent data states.",
+			"keyPoints": [
+				"request states",
+				"timeouts and cancellation",
+				"idempotency and retries"
+			],
+			"hints": [
+				"Mention user feedback."
+			],
+			"followUps": [
+				"How would you handle offline retries?"
+			],
+			"voicePrompt": "Describe a resilient frontend API strategy.",
+			"difficulty": "intermediate"
+		},
+		{
+			"id": "frontend-intermediate-004",
+			"category": "State Management",
+			"question": "How do you decide between local component state and global store state?",
+			"sampleAnswer": "I keep state local when only one component or page needs it, like a temporary form draft. I move state to a global store when multiple views need shared access, when state must survive navigation, or when updates come from different sources. The goal is to avoid both prop drilling and unnecessary global complexity. I choose the smallest scope that keeps data flow clear.",
+			"keyPoints": [
+				"local for isolated concerns",
+				"global for shared lifecycle",
+				"smallest necessary scope"
+			],
+			"hints": [
+				"Use practical examples."
+			],
+			"followUps": [
+				"What are signs of overusing global state?"
+			],
+			"voicePrompt": "How do you choose local vs global state?",
+			"difficulty": "intermediate"
+		},
+		{
+			"id": "frontend-intermediate-005",
+			"category": "Performance",
+			"question": "How would you investigate a slow page load in production?",
+			"sampleAnswer": "I begin with real-user metrics and a baseline from Core Web Vitals to identify whether the issue is network, render, or script execution. Then I inspect waterfall traces, bundle composition, and third-party script impact. I prioritize fixes with highest user impact, such as reducing blocking JavaScript, optimizing large assets, and deferring non-critical code. After each change I verify with the same metrics to confirm improvement.",
+			"keyPoints": [
+				"measure first",
+				"inspect waterfall and bundles",
+				"validate impact after fixes"
+			],
+			"hints": [
+				"Use an evidence-driven flow."
+			],
+			"followUps": [
+				"How do you avoid regressions later?"
+			],
+			"voicePrompt": "Walk through debugging slow page loads.",
+			"difficulty": "intermediate"
+		},
+		{
+			"id": "frontend-intermediate-006",
+			"category": "Security",
+			"question": "How do you secure token handling in a web app?",
+			"sampleAnswer": "I minimize token exposure by preferring secure, HTTP-only cookies for session tokens when architecture allows it. If local storage is unavoidable, I apply strict XSS defenses because any script injection can leak tokens. I also enforce short expirations, rotation, and server-side validation for audience and expiry claims. Finally, I make logout and token revocation clear so compromised tokens are invalidated quickly.",
+			"keyPoints": [
+				"reduce token exposure",
+				"defend against XSS",
+				"rotation and expiry"
+			],
+			"hints": [
+				"Discuss tradeoffs, not absolutes."
+			],
+			"followUps": [
+				"When are cookies not enough?"
+			],
+			"voicePrompt": "How do you handle auth tokens safely?",
+			"difficulty": "intermediate"
+		},
+		{
+			"id": "frontend-intermediate-007",
+			"category": "Testing",
+			"question": "How do you test a feature with voice input and fallback typing?",
+			"sampleAnswer": "I separate the speech logic into a composable and mock browser speech APIs in tests to control transcripts and errors. Then I verify the typed path independently so unsupported speech still allows submission. I also test permission-denied and unsupported-browser states because those are common in mobile environments. End-to-end tests should cover mode switching to make sure the same answer field is updated consistently.",
+			"keyPoints": [
+				"mock speech APIs",
+				"test fallback path",
+				"cover error states"
+			],
+			"hints": [
+				"Mention both unit and E2E levels."
+			],
+			"followUps": [
+				"How do you test on iOS Safari?"
+			],
+			"voicePrompt": "How would you test voice input with typed fallback?",
+			"difficulty": "intermediate"
+		},
+		{
+			"id": "frontend-intermediate-008",
+			"category": "CSS",
+			"question": "How do you build a responsive layout that also respects iPhone safe areas?",
+			"sampleAnswer": "I start mobile-first with flexible containers and spacing tokens, then add breakpoint adjustments only where needed. For iPhone and standalone PWAs I apply env(safe-area-inset-top) and env(safe-area-inset-bottom) so controls stay clear of the notch and home indicator. I keep primary actions sticky and large enough for touch. This gives consistent behavior across phones while still scaling to desktop.",
+			"keyPoints": [
+				"mobile-first layout",
+				"safe-area env variables",
+				"touch-friendly controls"
+			],
+			"hints": [
+				"Mention sticky controls for actions."
+			],
+			"followUps": [
+				"How do you test safe areas on desktop?"
+			],
+			"voicePrompt": "How do you design for responsive safe-area layouts?",
+			"difficulty": "intermediate"
+		},
+		{
+			"id": "frontend-intermediate-009",
+			"category": "Architecture",
+			"question": "How do you decide if a feature should be split into multiple components?",
+			"sampleAnswer": "I split components when one file has mixed responsibilities, repeated UI sections, or logic that is hard to test and reason about. A good split keeps each component focused on one concern and creates clearer props contracts. I avoid splitting too early because too many tiny files can hurt readability. I refactor when complexity or reuse justifies the change.",
+			"keyPoints": [
+				"single responsibility",
+				"clear contracts",
+				"avoid premature splitting"
+			],
+			"hints": [
+				"Explain tradeoff between size and clarity."
+			],
+			"followUps": [
+				"What is your threshold for refactor?"
+			],
+			"voicePrompt": "When do you split components?",
+			"difficulty": "intermediate"
+		},
+		{
+			"id": "frontend-intermediate-010",
+			"category": "HTTP",
+			"question": "Explain optimistic UI updates and their risks.",
+			"sampleAnswer": "Optimistic updates change the UI immediately before the server confirms success, so the app feels faster. I use them for actions with high success rates and reversible effects, like toggles. The risk is mismatch when the request fails, so I always keep rollback logic and clear error messages. Without rollback, users can trust incorrect state and make wrong decisions.",
+			"keyPoints": [
+				"immediate UI feedback",
+				"rollback on failure",
+				"choose suitable operations"
+			],
+			"hints": [
+				"Mention mismatch risk."
+			],
+			"followUps": [
+				"How do you avoid flicker on rollback?"
+			],
+			"voicePrompt": "What are optimistic updates and tradeoffs?",
+			"difficulty": "intermediate"
+		},
+		{
+			"id": "frontend-intermediate-011",
+			"category": "Vue",
+			"question": "Explain the virtual DOM in Vue and how it improves performance.",
+			"sampleAnswer": "Vue keeps a lightweight virtual DOM tree that represents the UI in memory. When reactive state changes, Vue diffs the new virtual tree against the previous one and patches only the real DOM nodes that changed. Vue 3 also uses compiler hints like static hoisting and patch flags so unchanged parts are skipped. This is faster than rewriting large parts of the real DOM on every update.",
+			"keyPoints": [
+				"in-memory UI representation",
+				"diff and patch only changes",
+				"compiler optimizations in Vue 3"
+			],
+			"hints": [
+				"Contrast virtual DOM updates with full DOM rewrites."
+			],
+			"followUps": [
+				"How does Vue reactivity decide what needs to re-render?"
+			],
+			"voicePrompt": "Explain the virtual DOM in Vue and why it helps performance.",
+			"difficulty": "intermediate"
+		},
+		{
+			"id": "frontend-intermediate-012",
+			"category": "Vue",
+			"question": "How do you manage state in Vue using ref, reactive, and Pinia?",
+			"sampleAnswer": "I use ref for primitives and single values, and reactive when I want an object-like local state. If several components need the same data, I move it into a Pinia store instead of passing props through many layers. Computed values stay derived so I do not duplicate state that can be calculated. I keep local UI state in the component and shared business state in Pinia.",
+			"keyPoints": [
+				"ref vs reactive for local state",
+				"Pinia for shared state",
+				"computed for derived data"
+			],
+			"hints": [
+				"Explain when state should leave the component."
+			],
+			"followUps": [
+				"When is provide/inject enough instead of Pinia?"
+			],
+			"voicePrompt": "How do you manage state in Vue with ref, reactive, and Pinia?",
+			"difficulty": "intermediate"
+		},
+		{
+			"id": "frontend-intermediate-013",
+			"category": "State Management",
+			"question": "How do you implement provide/inject or Pinia for global state management?",
+			"sampleAnswer": "I use provide/inject for tree-scoped dependencies like theme, form context, or a parent feature that children need without prop drilling. For app-wide data such as auth user, cart, or settings, I use Pinia because it has a clear store API, DevTools support, and easier testing. I avoid putting everything in one giant store and keep stores by domain. The rule is smallest scope first, then Pinia when many unrelated views need the same state.",
+			"keyPoints": [
+				"provide/inject for tree-local context",
+				"Pinia for app-wide domains",
+				"avoid one giant store"
+			],
+			"hints": [
+				"Give a concrete example for each."
+			],
+			"followUps": [
+				"How do you persist Pinia state across refresh?"
+			],
+			"voicePrompt": "How do you share global state in Vue with provide inject or Pinia?",
+			"difficulty": "intermediate"
+		},
+		{
+			"id": "frontend-intermediate-014",
+			"category": "Performance",
+			"question": "How do you optimize Vue applications for performance?",
+			"sampleAnswer": "I start by measuring with Vue DevTools and browser performance traces so I fix real bottlenecks. Then I split routes and heavy components with defineAsyncComponent, keep lists efficient with keys, and use v-once or computed caching where work is expensive. I also watch watchers and deep reactive objects so I do not trigger extra renders. If a view is still heavy, I virtualize long lists and defer non-critical UI.",
+			"keyPoints": [
+				"measure before optimizing",
+				"async components and list keys",
+				"avoid unnecessary reactivity work"
+			],
+			"hints": [
+				"List two Vue-specific techniques."
+			],
+			"followUps": [
+				"When would you use shallowRef?"
+			],
+			"voicePrompt": "How do you optimize a Vue app for performance?",
+			"difficulty": "intermediate"
+		},
+		{
+			"id": "frontend-intermediate-015",
+			"category": "Vue",
+			"question": "How do you handle forms and validation in Vue?",
+			"sampleAnswer": "I bind inputs with v-model, keep form state in a reactive object, and validate on blur or submit depending on the UX. For simple forms I write small validators and show field-level errors next to the input. For larger forms I use a library like VeeValidate or a schema with Zod so rules stay reusable. I also disable double submit while the request is in flight and map server errors back to fields.",
+			"keyPoints": [
+				"v-model and field-level errors",
+				"validate on blur or submit",
+				"handle client and server errors"
+			],
+			"hints": [
+				"Mention both simple validators and a library."
+			],
+			"followUps": [
+				"How do you handle multi-step forms?"
+			],
+			"voicePrompt": "How do you handle forms and validation in Vue?",
+			"difficulty": "intermediate"
+		},
+		{
+			"id": "frontend-intermediate-016",
+			"category": "Vue",
+			"question": "What are Vue composables and how do you create custom ones?",
+			"sampleAnswer": "A composable is a function, usually named useSomething, that extracts reusable stateful logic with Composition API. I create one when two components share the same data-fetching, toggle, or device behavior and I do not want to copy setup code. Inside the composable I keep refs, computed values, and functions, then return only what the component needs. I keep each composable focused so it stays easy to test without mounting a full page.",
+			"keyPoints": [
+				"reusable stateful logic",
+				"use-prefixed functions",
+				"return a small public API"
+			],
+			"hints": [
+				"Give one example like useFetch or useToggle."
+			],
+			"followUps": [
+				"How is a composable different from a plain utility function?"
+			],
+			"voicePrompt": "What are Vue composables and how do you write a custom one?",
+			"difficulty": "intermediate"
+		},
+		{
+			"id": "frontend-intermediate-017",
+			"category": "Vue",
+			"question": "How do you implement routing in Vue using Vue Router?",
+			"sampleAnswer": "I define routes with path, name, and a component, then wrap the app in a router view so each URL renders the matching page. I use route params and query for resource ids and filters, and navigation guards for auth-protected pages. Lazy-loaded route components keep the first bundle smaller. I also set a fallback route for unknown paths so users get a clear 404 page.",
+			"keyPoints": [
+				"route config and router-view",
+				"params and navigation guards",
+				"lazy routes and 404 fallback"
+			],
+			"hints": [
+				"Mention guards for protected pages."
+			],
+			"followUps": [
+				"How do you keep query state in sync with filters?"
+			],
+			"voicePrompt": "How do you set up routing with Vue Router?",
+			"difficulty": "intermediate"
+		},
+		{
+			"id": "frontend-intermediate-018",
+			"category": "Nuxt",
+			"question": "Explain the concept of server-side rendering (SSR) in Nuxt.",
+			"sampleAnswer": "SSR means the first HTML is generated on the server with the current data, then hydrated in the browser so the app becomes interactive. In Nuxt this is the default rendering mode, which helps first paint, SEO, and social previews compared with a client-only SPA. I still have to keep code universal, so I avoid using window or document during server setup. For some pages I switch to prerender or client-only when SSR cost is not worth it.",
+			"keyPoints": [
+				"server HTML then hydrate",
+				"better first paint and SEO",
+				"keep code universal"
+			],
+			"hints": [
+				"Contrast SSR with a client-only Vue SPA."
+			],
+			"followUps": [
+				"When would you choose SSG instead of SSR?"
+			],
+			"voicePrompt": "Explain server-side rendering in Nuxt.",
+			"difficulty": "intermediate"
+		},
+		{
+			"id": "frontend-intermediate-019",
+			"category": "Nuxt",
+			"question": "How do you fetch data in Nuxt using useAsyncData, useFetch, and prerendering?",
+			"sampleAnswer": "useAsyncData and useFetch run on the server during SSR, then reuse the payload on the client so the same request is not fired twice. useFetch is a convenience wrapper around useAsyncData plus $fetch, which I use for simple API calls. For static pages I prerender with route rules or generate so data is baked in at build time, similar to getStaticProps. For per-request data I keep SSR on so each visit gets fresh server data, similar to getServerSideProps.",
+			"keyPoints": [
+				"server fetch then payload reuse",
+				"useFetch for simple APIs",
+				"prerender vs per-request SSR"
+			],
+			"hints": [
+				"Map the idea to static versus request-time data."
+			],
+			"followUps": [
+				"How do you refresh data after a user action?"
+			],
+			"voicePrompt": "How do you fetch data in Nuxt with useAsyncData and useFetch?",
+			"difficulty": "intermediate"
+		},
+		{
+			"id": "frontend-intermediate-020",
+			"category": "Vue",
+			"question": "How do you implement API calls and error handling in Vue?",
+			"sampleAnswer": "I keep request logic in a composable or service and expose loading, data, and error state to the component. I handle HTTP errors by status, show a user-friendly message, and log enough detail for debugging. For aborted navigation I cancel in-flight requests so stale responses do not overwrite newer state. On mutations I prevent double submit and optionally retry only safe GET-like calls.",
+			"keyPoints": [
+				"loading success error states",
+				"user-facing vs logged errors",
+				"cancel stale requests"
+			],
+			"hints": [
+				"Talk about UI state, not only fetch()."
+			],
+			"followUps": [
+				"How do you share one API error component across pages?"
+			],
+			"voicePrompt": "How do you make API calls and handle errors in Vue?",
+			"difficulty": "intermediate"
+		},
+		{
+			"id": "frontend-intermediate-021",
+			"category": "Security",
+			"question": "How do you handle authentication and authorization in frontend apps?",
+			"sampleAnswer": "Authentication proves who the user is, usually with a login flow and a session cookie or token. Authorization decides what they can do, so I hide or disable UI and still enforce the same rules on the API because the frontend can be bypassed. I protect routes with Vue Router guards and keep the user profile in a Pinia store after login. I also handle expiry, logout, and forbidden responses so users are sent to login or an access-denied page.",
+			"keyPoints": [
+				"authn vs authz",
+				"route guards plus server enforcement",
+				"expiry and forbidden handling"
+			],
+			"hints": [
+				"Stress that the API must still authorize."
+			],
+			"followUps": [
+				"Where do you store tokens and why?"
+			],
+			"voicePrompt": "How do you handle authentication and authorization on the frontend?",
+			"difficulty": "intermediate"
+		},
+		{
+			"id": "frontend-intermediate-022",
+			"category": "Web Performance",
+			"question": "How do you optimize web performance and reduce load times?",
+			"sampleAnswer": "I measure Core Web Vitals first so I know whether the problem is LCP, INP, or CLS. Then I shrink the critical path by code-splitting, compressing assets, using modern image formats, and caching static files. I defer third-party scripts and lazy-load below-the-fold content so the first screen appears sooner. After changes I re-measure in the lab and, when possible, with real-user metrics.",
+			"keyPoints": [
+				"measure Core Web Vitals",
+				"shrink critical path",
+				"lazy-load and re-measure"
+			],
+			"hints": [
+				"Start with measurement, then list fixes."
+			],
+			"followUps": [
+				"Which metric would you prioritize for an e-commerce homepage?"
+			],
+			"voicePrompt": "How do you optimize web performance and load times?",
+			"difficulty": "intermediate"
+		},
+		{
+			"id": "frontend-intermediate-023",
+			"category": "PWA",
+			"question": "Explain Progressive Web Apps (PWAs) and their benefits.",
+			"sampleAnswer": "A PWA is a web app that can feel installable and more reliable through a manifest and a service worker. Benefits include offline or flaky-network support, home-screen install, and faster repeat visits from caching. I still treat it as progressive, so the app works in a normal browser first and then adds those extras. The tradeoff is cache complexity, so I plan update and versioning carefully.",
+			"keyPoints": [
+				"manifest and service worker",
+				"offline and installable UX",
+				"cache updates are the hard part"
+			],
+			"hints": [
+				"Define it, then list two user benefits."
+			],
+			"followUps": [
+				"How do you notify users when a new service worker is waiting?"
+			],
+			"voicePrompt": "What is a PWA and why would you build one?",
+			"difficulty": "intermediate"
+		},
+		{
+			"id": "frontend-intermediate-024",
+			"category": "Vue",
+			"question": "How do you implement lazy loading and code splitting in Vue?",
+			"sampleAnswer": "I split by route first so each page loads only the code it needs, using dynamic import in the Vue Router config. For heavy widgets I use defineAsyncComponent with a loading and error state. I also lazy-load images and below-the-fold sections so the first paint stays light. I check the bundle analyzer after to confirm the split actually reduced the entry chunk.",
+			"keyPoints": [
+				"route-level dynamic import",
+				"defineAsyncComponent for heavy UI",
+				"verify with a bundle analyzer"
+			],
+			"hints": [
+				"Mention both routes and components."
+			],
+			"followUps": [
+				"What do you put in the initial bundle versus a lazy chunk?"
+			],
+			"voicePrompt": "How do you do lazy loading and code splitting in Vue?",
+			"difficulty": "intermediate"
+		},
+		{
+			"id": "frontend-intermediate-025",
+			"category": "Accessibility",
+			"question": "What are web accessibility standards (WCAG) and how do you implement them?",
+			"sampleAnswer": "WCAG is a set of guidelines for making web content usable for people with disabilities, organized around perceivable, operable, understandable, and robust. In practice I use semantic HTML, keyboard access, visible focus, labels on inputs, and sufficient color contrast. I add ARIA only when native elements are not enough. I check with keyboard-only use, a screen reader pass, and automated tools, then fix real user flows, not just lint warnings.",
+			"keyPoints": [
+				"POUR principles",
+				"semantic HTML and keyboard support",
+				"ARIA as a last step"
+			],
+			"hints": [
+				"Name the four WCAG principles if you can."
+			],
+			"followUps": [
+				"How do you handle accessible modals and focus trapping?"
+			],
+			"voicePrompt": "What is WCAG and how do you implement accessibility?",
+			"difficulty": "intermediate"
+		},
+		{
+			"id": "frontend-intermediate-026",
+			"category": "Testing",
+			"question": "How do you write unit tests in Vue using Vitest and Vue Test Utils?",
+			"sampleAnswer": "I test component behavior from the user’s point of view: render with Vue Test Utils or Testing Library, trigger an action, and assert the visible result. I mock network calls and Pinia stores so tests stay fast and isolated. I prefer queries by role or label over brittle CSS selectors. For composables I test the function directly without mounting a full page when the UI is not the point.",
+			"keyPoints": [
+				"test user-visible behavior",
+				"mock APIs and stores",
+				"prefer accessible queries"
+			],
+			"hints": [
+				"Describe arrange, act, assert."
+			],
+			"followUps": [
+				"When do you snapshot test a Vue component?"
+			],
+			"voicePrompt": "How do you unit test Vue components with Vitest?",
+			"difficulty": "intermediate"
+		},
+		{
+			"id": "frontend-intermediate-027",
+			"category": "Testing",
+			"question": "Explain end-to-end testing using Cypress or Selenium.",
+			"sampleAnswer": "End-to-end tests drive a real browser through critical user flows like login, checkout, or submitting a form. Cypress runs in the browser with a fast interactive runner, while Selenium is more general and can automate many browsers through WebDriver. I keep E2E coverage small and stable: happy paths and a few high-risk failures, not every edge case. Flaky selectors and shared test data are the usual failure points, so I use data-test ids and isolated fixtures.",
+			"keyPoints": [
+				"real browser critical flows",
+				"Cypress vs Selenium tradeoff",
+				"keep the suite small and stable"
+			],
+			"hints": [
+				"Explain purpose first, then tools."
+			],
+			"followUps": [
+				"How do you reduce flaky E2E tests?"
+			],
+			"voicePrompt": "What is end-to-end testing with Cypress or Selenium?",
+			"difficulty": "intermediate"
+		},
+		{
+			"id": "frontend-intermediate-028",
+			"category": "Architecture",
+			"question": "Explain the concept of component-driven architecture.",
+			"sampleAnswer": "Component-driven architecture means the UI is built from small, reusable pieces with clear inputs and outputs instead of large page-specific templates. I start with primitives, then compose them into features, then into pages. This makes design consistent, testing easier, and changes safer because a button or form field is defined once. It fails when components become too coupled to one page or take too many unrelated props.",
+			"keyPoints": [
+				"small reusable UI pieces",
+				"compose primitives into pages",
+				"clear props and events"
+			],
+			"hints": [
+				"Describe the primitive to page layering."
+			],
+			"followUps": [
+				"How does this relate to a design system?"
+			],
+			"voicePrompt": "What is component-driven architecture?",
+			"difficulty": "intermediate"
+		},
+		{
+			"id": "frontend-advanced-001",
+			"category": "Frontend Architecture",
+			"question": "How would you design a maintainable design system for multiple teams?",
+			"sampleAnswer": "I start with design tokens for color, spacing, typography, and motion so visual decisions are centralized and reusable. Then I build a small set of accessible primitives like buttons, inputs, and cards with consistent APIs and documentation. Governance is important, so I define contribution rules and versioning to prevent breaking changes across teams. I also provide usage examples and migration guides so adoption stays practical rather than theoretical.",
+			"keyPoints": [
+				"design tokens",
+				"accessible primitives",
+				"governance and versioning"
+			],
+			"hints": [
+				"Mention documentation and migration."
+			],
+			"followUps": [
+				"How do you avoid token sprawl?"
+			],
+			"voicePrompt": "Design a cross-team frontend design system.",
+			"difficulty": "advanced"
+		},
+		{
+			"id": "frontend-advanced-002",
+			"category": "Performance",
+			"question": "What is your strategy for preventing frontend performance regressions?",
+			"sampleAnswer": "I define performance budgets for key metrics such as bundle size and Core Web Vitals, then enforce them in CI where possible. I instrument both lab and field monitoring so regressions are caught before and after release. Large changes include performance verification in the review checklist, especially for third-party scripts and images. Prevention works best when performance is treated as a product requirement, not a one-time cleanup.",
+			"keyPoints": [
+				"performance budgets",
+				"CI and monitoring",
+				"review discipline"
+			],
+			"hints": [
+				"Include both pre and post release checks."
+			],
+			"followUps": [
+				"How strict should budgets be?"
+			],
+			"voicePrompt": "How do you prevent frontend performance regressions?",
+			"difficulty": "advanced"
+		},
+		{
+			"id": "frontend-advanced-003",
+			"category": "Frontend Architecture",
+			"question": "Build a complete frontend application that consumes APIs, manages state, and is fully responsive. How would you approach it?",
+			"sampleAnswer": "I would start with the user flows and data contracts, then pick Vue, Vue Router, and Pinia so routing, local UI state, and shared domain state stay separated. API access would live in services or composables with loading, error, retry, and auth handling, never inside random components. The UI would be mobile-first with a small component system, accessible forms, and lazy-loaded routes so performance stays acceptable as the app grows. I would add Vitest for components, a few Cypress flows for login and the main happy path, and environment-based config so the same app can talk to staging or production APIs.",
+			"keyPoints": [
+				"separate routing, API, and store layers",
+				"responsive component system",
+				"testing and environment config"
+			],
+			"hints": [
+				"Walk through architecture, not a feature laundry list."
+			],
+			"followUps": [
+				"How would you handle offline use or optimistic updates?"
+			],
+			"voicePrompt": "How would you build a complete Vue app that uses APIs, state, and responsive UI?",
+			"difficulty": "advanced"
+		}
+	]
+}

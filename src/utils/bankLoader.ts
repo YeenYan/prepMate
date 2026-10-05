@@ -1,28 +1,33 @@
-import advancedRaw from "../data/advanced.json";
+import backendRaw from "../data/backend.json";
 import basicsRaw from "../data/basics.json";
 import coachRaw from "../data/coach-knowledge.json";
-import easyRaw from "../data/easy.json";
-import intermediateRaw from "../data/intermediate.json";
+import frontendRaw from "../data/frontend.json";
+import infrastructureRaw from "../data/infrastructure.json";
+import scenarioRaw from "../data/scenario.json";
 import type {
   CoachKnowledge,
+  DifficultyKey,
   InterviewQuestion,
   ModeBank,
   ModeKey,
   RawModeBank
 } from "../types/interview";
+import { isDifficultyKey } from "../types/interview";
 
 const FILE_BY_MODE: Record<ModeKey, string> = {
-  easy: "easy.json",
-  intermediate: "intermediate.json",
-  advanced: "advanced.json",
-  basics: "basics.json"
+  basics: "basics.json",
+  frontend: "frontend.json",
+  backend: "backend.json",
+  infrastructure: "infrastructure.json",
+  scenario: "scenario.json"
 };
 
 const RAW_BANKS: Record<ModeKey, RawModeBank> = {
-  easy: easyRaw as RawModeBank,
-  intermediate: intermediateRaw as RawModeBank,
-  advanced: advancedRaw as RawModeBank,
-  basics: basicsRaw as RawModeBank
+  basics: basicsRaw as RawModeBank,
+  frontend: frontendRaw as RawModeBank,
+  backend: backendRaw as RawModeBank,
+  infrastructure: infrastructureRaw as RawModeBank,
+  scenario: scenarioRaw as RawModeBank
 };
 
 function normalizeQuestion(raw: Record<string, unknown>, mode: ModeKey): InterviewQuestion {
@@ -47,9 +52,18 @@ function normalizeQuestion(raw: Record<string, unknown>, mode: ModeKey): Intervi
       .filter((entry) => entry.length > 0);
   };
 
+  const difficultyRaw = String(raw.difficulty || "").trim();
+  const difficulty =
+    mode !== "basics" && isDifficultyKey(difficultyRaw) ? difficultyRaw : undefined;
+
+  if (mode !== "basics" && !difficulty) {
+    throw new Error(`${fileName}: difficulty must be easy|intermediate|advanced for id "${id}"`);
+  }
+
   return {
     id,
     category: String(raw.category || "General").trim() || "General",
+    difficulty,
     question,
     sampleAnswer,
     keyPoints: getStringArray(raw.keyPoints),
@@ -84,10 +98,22 @@ export function loadBank(mode: ModeKey): ModeBank {
 
 export function loadAllBanks(): Record<ModeKey, ModeBank> {
   return {
-    easy: loadBank("easy"),
-    intermediate: loadBank("intermediate"),
-    advanced: loadBank("advanced"),
-    basics: loadBank("basics")
+    basics: loadBank("basics"),
+    frontend: loadBank("frontend"),
+    backend: loadBank("backend"),
+    infrastructure: loadBank("infrastructure"),
+    scenario: loadBank("scenario")
+  };
+}
+
+export function filterBankByDifficulty(
+  bank: ModeBank,
+  difficulty?: DifficultyKey
+): ModeBank {
+  if (!difficulty || bank.mode === "basics") return bank;
+  return {
+    ...bank,
+    questions: bank.questions.filter((question) => question.difficulty === difficulty)
   };
 }
 

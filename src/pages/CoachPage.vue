@@ -3,6 +3,7 @@ import { computed, onMounted, ref } from "vue";
 import GlassContainer from "../components/GlassContainer.vue";
 import { useCoach } from "../composables/useCoach";
 import { useBanksStore } from "../stores/useBanksStore";
+import { MODE_KEYS } from "../types/interview";
 
 const banksStore = useBanksStore();
 const input = ref("");
@@ -21,12 +22,10 @@ function ask() {
   if (!input.value.trim() || !runtime.value || !banksStore.banks) return;
   const question = input.value.trim();
   messages.value.push({ role: "user", text: question });
-  const reply = runtime.value.answerCoachChat(question, [
-    banksStore.banks.easy,
-    banksStore.banks.intermediate,
-    banksStore.banks.advanced,
-    banksStore.banks.basics
-  ]);
+  const reply = runtime.value.answerCoachChat(
+    question,
+    MODE_KEYS.map((key) => banksStore.banks![key])
+  );
   messages.value.push({ role: "coach", text: reply });
   input.value = "";
 }
@@ -49,7 +48,7 @@ function ask() {
           class="rounded-2xl px-3 py-2 text-sm whitespace-pre-wrap"
           :class="
             message.role === 'coach'
-              ? 'bg-white/85 text-[var(--color-text-primary)]'
+              ? 'bg-white/10 text-[var(--color-text-primary)]'
               : 'ml-8 bg-[var(--color-accent)]/20 text-[var(--color-text-primary)]'
           "
         >

@@ -1,127 +1,223 @@
 {
-  "mode": "basics",
-  "title": "Basic / HR",
-  "description": "Behavioral and personal interview questions with adaptable first-person model answers.",
-  "questions": [
-    {
-      "id": "basics-001",
-      "category": "Introduction",
-      "question": "Tell me about yourself.",
-      "sampleAnswer": "I am a [role] with [years of experience] building [stack] products. In my recent role at [company], I led work on [project] and improved [metric] by [number]. I enjoy solving user problems with clear communication and reliable execution. I am interested in this role because it focuses on [role need], which matches how I like to work and grow.",
-      "keyPoints": ["current role and years", "specific achievement with number", "fit for target role"],
-      "hints": ["Keep it professional and role-focused."],
-      "followUps": ["Can you go deeper into that project result?"],
-      "voicePrompt": "Tell me about yourself."
-    },
-    {
-      "id": "basics-002",
-      "category": "Compensation",
-      "question": "What is your expected salary?",
-      "sampleAnswer": "Based on my experience in [domain], my current scope, and market benchmarks in [location], I am targeting a range of [salary range]. I am flexible depending on the full compensation package, growth opportunities, and role impact. My goal is to find a fair offer where I can contribute strongly and continue developing long-term in the team.",
-      "keyPoints": ["clear range", "market-based reasoning", "flexibility and alignment"],
-      "hints": ["State a range, not a single rigid number."],
-      "followUps": ["What factors matter beyond base pay?"],
-      "voicePrompt": "What salary are you expecting?"
-    },
-    {
-      "id": "basics-003",
-      "category": "Motivation",
-      "question": "Why do you want this role?",
-      "sampleAnswer": "I want this role because it combines [skills] that I am strongest in with [new challenge] that I am excited to grow into. I have followed your work on [product or initiative], and I value the way your team focuses on [quality, speed, or customer impact]. I believe I can contribute quickly through my experience in [relevant area] while learning from the team’s depth in [area].",
-      "keyPoints": ["specific fit", "research about company", "value and growth balance"],
-      "hints": ["Avoid generic praise."],
-      "followUps": ["How does this compare with your current role?"],
-      "voicePrompt": "Why are you interested in this role?"
-    },
-    {
-      "id": "basics-004",
-      "category": "Strengths",
-      "question": "What are your strengths?",
-      "sampleAnswer": "One strength I consistently bring is structured problem solving under pressure. I break complex work into clear milestones, communicate tradeoffs early, and keep stakeholders updated so decisions happen quickly. Another strength is ownership: when I commit to an outcome, I follow through from planning to validation and post-release monitoring. These strengths have helped me deliver [example result] in [context].",
-      "keyPoints": ["specific strengths", "behavior evidence", "real outcome example"],
-      "hints": ["Use one concrete example."],
-      "followUps": ["How did those strengths help your team recently?"],
-      "voicePrompt": "What are your strengths?"
-    },
-    {
-      "id": "basics-005",
-      "category": "Weaknesses",
-      "question": "What is one weakness you are improving?",
-      "sampleAnswer": "A weakness I identified is that I sometimes go too deep into implementation details too early. To improve, I now start with a short alignment summary on goals, constraints, and success metrics before diving into solutions. I also ask for early feedback checkpoints to confirm I am solving the right problem. This has improved my speed and collaboration quality on cross-functional work.",
-      "keyPoints": ["real weakness", "active improvement steps", "positive outcome"],
-      "hints": ["Show accountability and progress."],
-      "followUps": ["What changed after you applied that approach?"],
-      "voicePrompt": "Share a weakness and how you are addressing it."
-    },
-    {
-      "id": "basics-006",
-      "category": "Conflict",
-      "question": "Tell me about a conflict with a teammate and how you handled it.",
-      "sampleAnswer": "In [project], a teammate and I disagreed on implementation priority, and delivery risk was rising. I scheduled a focused discussion where we listed assumptions, constraints, and impact on users instead of debating preferences. We aligned on a phased approach: first a safe baseline, then optimization in a second step. The conflict resolved quickly, and we delivered on time with better trust in the team.",
-      "keyPoints": ["clear conflict context", "structured resolution steps", "result and relationship outcome"],
-      "hints": ["Use STAR and stay respectful."],
-      "followUps": ["What did you learn from that conflict?"],
-      "voicePrompt": "Describe a teammate conflict you resolved."
-    },
-    {
-      "id": "basics-007",
-      "category": "Career Growth",
-      "question": "Where do you see yourself in 5 years?",
-      "sampleAnswer": "In five years, I see myself as a strong [role level] who can lead complex initiatives end-to-end and mentor teammates effectively. I want to deepen my expertise in [technical area] while growing my product and communication skills. My goal is to contribute at both code and system level, helping teams ship reliably and make better long-term decisions.",
-      "keyPoints": ["realistic trajectory", "technical and leadership growth", "value to team"],
-      "hints": ["Keep goals aligned with the role."],
-      "followUps": ["What skills are you building now for that path?"],
-      "voicePrompt": "Where do you see yourself in five years?"
-    },
-    {
-      "id": "basics-008",
-      "category": "Value",
-      "question": "Why should we hire you?",
-      "sampleAnswer": "You should hire me because I combine hands-on delivery with reliable communication across engineering and stakeholders. I have experience in [relevant domain], and I have consistently delivered outcomes like [specific metric or project]. I ramp up quickly, ask strong clarifying questions, and stay accountable for quality after release. I believe that combination would let me add value to your team early.",
-      "keyPoints": ["clear value proposition", "evidence from experience", "impact and accountability"],
-      "hints": ["Tie strengths to role needs."],
-      "followUps": ["What is one impact you can make in your first 90 days?"],
-      "voicePrompt": "Why should we hire you?"
-    },
-    {
-      "id": "basics-009",
-      "category": "Failure",
-      "question": "Tell me about a mistake you made and what you learned.",
-      "sampleAnswer": "Early in [project], I underestimated testing effort and we found bugs late in the release cycle. I took responsibility, coordinated a focused fix plan, and worked with QA to prioritize risk-based coverage. After that release, I introduced earlier test checkpoints and clearer definition-of-done criteria. The main lesson was to plan validation as part of delivery, not as a final step.",
-      "keyPoints": ["own the mistake", "recovery actions", "lasting process improvement"],
-      "hints": ["Show learning, not blame."],
-      "followUps": ["How did your team process change afterward?"],
-      "voicePrompt": "Share a mistake and what you learned."
-    },
-    {
-      "id": "basics-010",
-      "category": "Teamwork",
-      "question": "How do you work with cross-functional teams?",
-      "sampleAnswer": "I align early on goals, constraints, and decision timelines so engineering, product, and design have shared expectations. During execution I communicate status and risks in plain language, then escalate blockers before they become schedule issues. I also document key decisions so new context does not get lost. This approach helps teams move faster without sacrificing quality.",
-      "keyPoints": ["early alignment", "clear communication", "proactive risk handling"],
-      "hints": ["Mention shared goals and cadence."],
-      "followUps": ["How do you handle shifting priorities?"],
-      "voicePrompt": "How do you collaborate cross-functionally?"
-    },
-    {
-      "id": "basics-011",
-      "category": "Pressure",
-      "question": "How do you handle tight deadlines?",
-      "sampleAnswer": "When deadlines are tight, I first clarify non-negotiables and split work into must-have versus nice-to-have scope. I focus execution on highest impact tasks, communicate tradeoffs clearly, and keep frequent check-ins so surprises are surfaced early. I also protect quality on critical paths by keeping basic testing and rollback plans in place. That balance helps me deliver quickly without creating avoidable rework.",
-      "keyPoints": ["scope prioritization", "clear tradeoff communication", "quality guardrails"],
-      "hints": ["Show calm prioritization process."],
-      "followUps": ["When would you push back on deadline commitments?"],
-      "voicePrompt": "How do you perform under deadline pressure?"
-    },
-    {
-      "id": "basics-012",
-      "category": "Reverse Interview",
-      "question": "What questions would you ask the interviewer?",
-      "sampleAnswer": "I would ask what success looks like in the first 90 days, which current team challenges are most urgent, and how engineering decisions are made across product and design. I would also ask how feedback and growth are supported for this role. These questions help me understand expectations, collaboration style, and whether I can contribute effectively in your environment.",
-      "keyPoints": ["success metrics", "current challenges", "team process and growth"],
-      "hints": ["Ask about role clarity and impact."],
-      "followUps": ["Why do these questions matter to you?"],
-      "voicePrompt": "What questions would you ask us?"
-    }
-  ]
+	"mode": "basics",
+	"title": "Basics",
+	"description": "Behavioral and personal interview questions with adaptable first-person model answers.",
+	"questions": [
+		{
+			"id": "basics-001",
+			"category": "Introduction",
+			"question": "Tell me about yourself.",
+			"sampleAnswer": "I am a [role] with [years of experience] building [stack] products. In my recent role at [company], I led work on [project] and improved [metric] by [number]. I enjoy solving user problems with clear communication and reliable execution. I am interested in this role because it focuses on [role need], which matches how I like to work and grow.",
+			"keyPoints": [
+				"current role and years",
+				"specific achievement with number",
+				"fit for target role"
+			],
+			"hints": [
+				"Keep it professional and role-focused."
+			],
+			"followUps": [
+				"Can you go deeper into that project result?"
+			],
+			"voicePrompt": "Tell me about yourself."
+		},
+		{
+			"id": "basics-002",
+			"category": "Compensation",
+			"question": "What is your expected salary?",
+			"sampleAnswer": "Based on my experience in [domain], my current scope, and market benchmarks in [location], I am targeting a range of [salary range]. I am flexible depending on the full compensation package, growth opportunities, and role impact. My goal is to find a fair offer where I can contribute strongly and continue developing long-term in the team.",
+			"keyPoints": [
+				"clear range",
+				"market-based reasoning",
+				"flexibility and alignment"
+			],
+			"hints": [
+				"State a range, not a single rigid number."
+			],
+			"followUps": [
+				"What factors matter beyond base pay?"
+			],
+			"voicePrompt": "What salary are you expecting?"
+		},
+		{
+			"id": "basics-003",
+			"category": "Motivation",
+			"question": "Why do you want this role?",
+			"sampleAnswer": "I want this role because it combines [skills] that I am strongest in with [new challenge] that I am excited to grow into. I have followed your work on [product or initiative], and I value the way your team focuses on [quality, speed, or customer impact]. I believe I can contribute quickly through my experience in [relevant area] while learning from the team’s depth in [area].",
+			"keyPoints": [
+				"specific fit",
+				"research about company",
+				"value and growth balance"
+			],
+			"hints": [
+				"Avoid generic praise."
+			],
+			"followUps": [
+				"How does this compare with your current role?"
+			],
+			"voicePrompt": "Why are you interested in this role?"
+		},
+		{
+			"id": "basics-004",
+			"category": "Strengths",
+			"question": "What are your strengths?",
+			"sampleAnswer": "One strength I consistently bring is structured problem solving under pressure. I break complex work into clear milestones, communicate tradeoffs early, and keep stakeholders updated so decisions happen quickly. Another strength is ownership: when I commit to an outcome, I follow through from planning to validation and post-release monitoring. These strengths have helped me deliver [example result] in [context].",
+			"keyPoints": [
+				"specific strengths",
+				"behavior evidence",
+				"real outcome example"
+			],
+			"hints": [
+				"Use one concrete example."
+			],
+			"followUps": [
+				"How did those strengths help your team recently?"
+			],
+			"voicePrompt": "What are your strengths?"
+		},
+		{
+			"id": "basics-005",
+			"category": "Weaknesses",
+			"question": "What is one weakness you are improving?",
+			"sampleAnswer": "A weakness I identified is that I sometimes go too deep into implementation details too early. To improve, I now start with a short alignment summary on goals, constraints, and success metrics before diving into solutions. I also ask for early feedback checkpoints to confirm I am solving the right problem. This has improved my speed and collaboration quality on cross-functional work.",
+			"keyPoints": [
+				"real weakness",
+				"active improvement steps",
+				"positive outcome"
+			],
+			"hints": [
+				"Show accountability and progress."
+			],
+			"followUps": [
+				"What changed after you applied that approach?"
+			],
+			"voicePrompt": "Share a weakness and how you are addressing it."
+		},
+		{
+			"id": "basics-006",
+			"category": "Conflict",
+			"question": "Tell me about a conflict with a teammate and how you handled it.",
+			"sampleAnswer": "In [project], a teammate and I disagreed on implementation priority, and delivery risk was rising. I scheduled a focused discussion where we listed assumptions, constraints, and impact on users instead of debating preferences. We aligned on a phased approach: first a safe baseline, then optimization in a second step. The conflict resolved quickly, and we delivered on time with better trust in the team.",
+			"keyPoints": [
+				"clear conflict context",
+				"structured resolution steps",
+				"result and relationship outcome"
+			],
+			"hints": [
+				"Use STAR and stay respectful."
+			],
+			"followUps": [
+				"What did you learn from that conflict?"
+			],
+			"voicePrompt": "Describe a teammate conflict you resolved."
+		},
+		{
+			"id": "basics-007",
+			"category": "Career Growth",
+			"question": "Where do you see yourself in 5 years?",
+			"sampleAnswer": "In five years, I see myself as a strong [role level] who can lead complex initiatives end-to-end and mentor teammates effectively. I want to deepen my expertise in [technical area] while growing my product and communication skills. My goal is to contribute at both code and system level, helping teams ship reliably and make better long-term decisions.",
+			"keyPoints": [
+				"realistic trajectory",
+				"technical and leadership growth",
+				"value to team"
+			],
+			"hints": [
+				"Keep goals aligned with the role."
+			],
+			"followUps": [
+				"What skills are you building now for that path?"
+			],
+			"voicePrompt": "Where do you see yourself in five years?"
+		},
+		{
+			"id": "basics-008",
+			"category": "Value",
+			"question": "Why should we hire you?",
+			"sampleAnswer": "You should hire me because I combine hands-on delivery with reliable communication across engineering and stakeholders. I have experience in [relevant domain], and I have consistently delivered outcomes like [specific metric or project]. I ramp up quickly, ask strong clarifying questions, and stay accountable for quality after release. I believe that combination would let me add value to your team early.",
+			"keyPoints": [
+				"clear value proposition",
+				"evidence from experience",
+				"impact and accountability"
+			],
+			"hints": [
+				"Tie strengths to role needs."
+			],
+			"followUps": [
+				"What is one impact you can make in your first 90 days?"
+			],
+			"voicePrompt": "Why should we hire you?"
+		},
+		{
+			"id": "basics-009",
+			"category": "Failure",
+			"question": "Tell me about a mistake you made and what you learned.",
+			"sampleAnswer": "Early in [project], I underestimated testing effort and we found bugs late in the release cycle. I took responsibility, coordinated a focused fix plan, and worked with QA to prioritize risk-based coverage. After that release, I introduced earlier test checkpoints and clearer definition-of-done criteria. The main lesson was to plan validation as part of delivery, not as a final step.",
+			"keyPoints": [
+				"own the mistake",
+				"recovery actions",
+				"lasting process improvement"
+			],
+			"hints": [
+				"Show learning, not blame."
+			],
+			"followUps": [
+				"How did your team process change afterward?"
+			],
+			"voicePrompt": "Share a mistake and what you learned."
+		},
+		{
+			"id": "basics-010",
+			"category": "Teamwork",
+			"question": "How do you work with cross-functional teams?",
+			"sampleAnswer": "I align early on goals, constraints, and decision timelines so engineering, product, and design have shared expectations. During execution I communicate status and risks in plain language, then escalate blockers before they become schedule issues. I also document key decisions so new context does not get lost. This approach helps teams move faster without sacrificing quality.",
+			"keyPoints": [
+				"early alignment",
+				"clear communication",
+				"proactive risk handling"
+			],
+			"hints": [
+				"Mention shared goals and cadence."
+			],
+			"followUps": [
+				"How do you handle shifting priorities?"
+			],
+			"voicePrompt": "How do you collaborate cross-functionally?"
+		},
+		{
+			"id": "basics-011",
+			"category": "Pressure",
+			"question": "How do you handle tight deadlines?",
+			"sampleAnswer": "When deadlines are tight, I first clarify non-negotiables and split work into must-have versus nice-to-have scope. I focus execution on highest impact tasks, communicate tradeoffs clearly, and keep frequent check-ins so surprises are surfaced early. I also protect quality on critical paths by keeping basic testing and rollback plans in place. That balance helps me deliver quickly without creating avoidable rework.",
+			"keyPoints": [
+				"scope prioritization",
+				"clear tradeoff communication",
+				"quality guardrails"
+			],
+			"hints": [
+				"Show calm prioritization process."
+			],
+			"followUps": [
+				"When would you push back on deadline commitments?"
+			],
+			"voicePrompt": "How do you perform under deadline pressure?"
+		},
+		{
+			"id": "basics-012",
+			"category": "Reverse Interview",
+			"question": "What questions would you ask the interviewer?",
+			"sampleAnswer": "I would ask what success looks like in the first 90 days, which current team challenges are most urgent, and how engineering decisions are made across product and design. I would also ask how feedback and growth are supported for this role. These questions help me understand expectations, collaboration style, and whether I can contribute effectively in your environment.",
+			"keyPoints": [
+				"success metrics",
+				"current challenges",
+				"team process and growth"
+			],
+			"hints": [
+				"Ask about role clarity and impact."
+			],
+			"followUps": [
+				"Why do these questions matter to you?"
+			],
+			"voicePrompt": "What questions would you ask us?"
+		}
+	]
 }

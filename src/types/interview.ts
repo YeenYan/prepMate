@@ -1,8 +1,29 @@
-export type ModeKey = "easy" | "intermediate" | "advanced" | "basics";
+export type ModeKey = "basics" | "frontend" | "backend" | "infrastructure" | "scenario";
+
+export type DifficultyKey = "easy" | "intermediate" | "advanced";
+
+export const MODE_KEYS: ModeKey[] = [
+  "basics",
+  "frontend",
+  "backend",
+  "infrastructure",
+  "scenario"
+];
+
+export const DIFFICULTY_KEYS: DifficultyKey[] = ["easy", "intermediate", "advanced"];
+
+export function isModeKey(value: string): value is ModeKey {
+  return (MODE_KEYS as string[]).includes(value);
+}
+
+export function isDifficultyKey(value: string): value is DifficultyKey {
+  return (DIFFICULTY_KEYS as string[]).includes(value);
+}
 
 export interface RawQuestion {
   id: string;
   category?: string;
+  difficulty?: string;
   question: string;
   sampleAnswer?: string;
   referenceAnswer?: string;
@@ -17,6 +38,7 @@ export interface RawQuestion {
 export interface InterviewQuestion {
   id: string;
   category: string;
+  difficulty?: DifficultyKey;
   question: string;
   sampleAnswer: string;
   keyPoints: string[];
@@ -96,6 +118,7 @@ export interface SessionAnswer {
 export interface SessionState {
   sessionId: string;
   mode: ModeKey;
+  difficulty?: DifficultyKey;
   queue: InterviewQuestion[];
   currentIndex: number;
   status: "idle" | "answering" | "feedback" | "stopped" | "completed";
@@ -107,6 +130,7 @@ export interface SessionState {
 export interface SummaryRecord {
   sessionId: string;
   mode: ModeKey;
+  difficulty?: DifficultyKey;
   averageScore: number;
   answeredCount: number;
   skippedCount: number;

@@ -12,6 +12,7 @@ import {
 import { shuffleArray } from "../utils/shuffle";
 import type {
   CoachKnowledge,
+  DifficultyKey,
   InterviewQuestion,
   ModeBank,
   ModeKey,
@@ -59,11 +60,12 @@ export const useSessionStore = defineStore("session", () => {
     saveActiveSession(session.value);
   }
 
-  function start(mode: ModeKey, bank: ModeBank) {
+  function start(mode: ModeKey, bank: ModeBank, difficulty?: DifficultyKey) {
     const queue = shuffleArray(bank.questions);
     session.value = {
       sessionId: createSessionId(),
       mode,
+      difficulty,
       queue,
       currentIndex: 0,
       status: "answering",
@@ -75,11 +77,16 @@ export const useSessionStore = defineStore("session", () => {
     persist();
   }
 
-  function resumeOrStart(mode: ModeKey, bank: ModeBank) {
-    if (session.value && session.value.mode === mode && session.value.status !== "completed") {
+  function resumeOrStart(mode: ModeKey, bank: ModeBank, difficulty?: DifficultyKey) {
+    if (
+      session.value &&
+      session.value.mode === mode &&
+      session.value.difficulty === difficulty &&
+      session.value.status !== "completed"
+    ) {
       return;
     }
-    start(mode, bank);
+    start(mode, bank, difficulty);
   }
 
   function submit(userAnswer: string, coach: CoachKnowledge) {
@@ -149,6 +156,7 @@ export const useSessionStore = defineStore("session", () => {
     return {
       sessionId: source.sessionId,
       mode: source.mode,
+      difficulty: source.difficulty,
       averageScore,
       answeredCount: answered.length,
       skippedCount: skipped.length,
