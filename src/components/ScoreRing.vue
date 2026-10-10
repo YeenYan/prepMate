@@ -13,7 +13,7 @@ const value = computed(() => Math.max(0, Math.min(100, Math.round(props.score)))
     <div
       class="relative h-16 w-16 rounded-full"
       :style="{
-        background: `conic-gradient(#a855f7 ${value * 3.6}deg, rgb(255 255 255 / 0.08) 0deg)`
+        background: `conic-gradient(var(--color-accent) ${value * 3.6}deg, rgb(255 255 255 / 0.08) 0deg)`
       }"
       aria-label="Answer score"
     >

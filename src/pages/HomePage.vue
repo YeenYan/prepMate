@@ -1,11 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted } from "vue";
 import { useRouter } from "vue-router";
-import {
-  ArrowPathIcon,
-  ChartBarIcon,
-  MicrophoneIcon
-} from "@heroicons/vue/24/outline";
+import { ArrowPathIcon, ChartBarIcon } from "@heroicons/vue/24/outline";
 import ModuleSectionsBlock from "../components/ModuleSectionsBlock.vue";
 import ModuleCategoryCard from "../components/ModuleCategoryCard.vue";
 import { useBanksStore } from "../stores/useBanksStore";
@@ -22,9 +18,6 @@ onMounted(() => {
 
 const hasResume = computed(() => Boolean(sessionStore.session));
 const hasSummary = computed(() => Boolean(sessionStore.lastSummary));
-const voiceMockCount = computed(
-  () => banksStore.getBank("frontend", "easy")?.questions.length || 0
-);
 
 function resumePath() {
   const session = sessionStore.session;
@@ -46,17 +39,10 @@ function resumePath() {
 
     <div class="grid grid-cols-2 gap-3">
       <ModuleCategoryCard
-        label="VOICE MOCK"
-        :count="voiceMockCount"
-        :icon="MicrophoneIcon"
-        icon-class="bg-indigo-500/20 text-indigo-200"
-        @click="router.push('/mock/frontend/easy')"
-      />
-      <ModuleCategoryCard
         label="LAST SUMMARY"
         :count="hasSummary ? sessionStore.lastSummary?.answeredCount || 0 : 0"
         :icon="ChartBarIcon"
-        icon-class="bg-fuchsia-500/20 text-fuchsia-200"
+        icon-class="bg-[var(--color-accent)]/20 text-[#c5d2ff]"
         :disabled="!hasSummary"
         @click="router.push('/summary/latest')"
       />
@@ -68,7 +54,7 @@ function resumePath() {
       :disabled="!hasResume"
       @click="router.push(resumePath())"
     >
-      <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-violet-500/20 text-violet-200">
+      <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--color-accent)]/20 text-[#c5d2ff]">
         <ArrowPathIcon class="h-5 w-5" aria-hidden="true" />
       </span>
       <span class="text-left">

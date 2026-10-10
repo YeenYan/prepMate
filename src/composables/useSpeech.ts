@@ -15,6 +15,9 @@ export function useSpeech() {
   const listening = ref(false);
   const speaking = ref(false);
   const error = ref("");
+  const spokenText = ref("");
+  const boundaryIndex = ref(0);
+  const boundarySeen = ref(false);
 
   const recognitionSupported = computed(
     () => Boolean(window.SpeechRecognition || window.webkitSpeechRecognition)
@@ -22,6 +25,81 @@ export function useSpeech() {
   const synthesisSupported = computed(() => "speechSynthesis" in window);
 
   let recognition: SpeechRecognition | null = null;
+  let speakId = 0;
+  let pendingSpeak: { text: string; id: number } | null = null;
+
+  const preferredNames = ["ava", "zoe", "allison", "samantha", "nicky"];
+
+  function voiceScore(voice: SpeechSynthesisVoice) {
+    const name = voice.name.toLowerCase();
+    const uri = voice.voiceURI.toLowerCase();
+    const lang = voice.lang.toLowerCase().replace("_", "-");
+    if (!lang.startsWith("en")) return 0;
+
+    let score = lang === "en-us" ? 40 : 12;
+    if (uri.includes("premium") || name.includes("premium")) score += 80;
+    else if (uri.includes("enhanced") || name.includes("enhanced")) score += 55;
+    if (uri.includes("siri") || name.includes("siri")) score += 25;
+    if (uri.includes("eloquence") || name.includes("eloquence") || name.includes("compact")) score -= 30;
+    if (name.includes("natural") || name.includes("neural")) score += 35;
+
+    const nameRank = preferredNames.findIndex((item) => name.includes(item));
+    if (nameRank >= 0) score += 20 - nameRank;
+    return score;
+  }
+
+  function bestVoice() {
+    const voices = window.speechSynthesis.getVoices();
+    let chosen: SpeechSynthesisVoice | null = null;
+    let chosenScore = 0;
+    for (const voice of voices) {
+      const score = voiceScore(voice);
+      if (score > chosenScore) {
+        chosen = voice;
+        chosenScore = score;
+      }
+    }
+    return chosen;
+  }
+
+  function playUtterance(text: string, id: number) {
+    const utterance = new SpeechSynthesisUtterance(text);
+    const voice = bestVoice();
+    if (voice) utterance.voice = voice;
+    utterance.lang = voice?.lang || "en-US";
+    utterance.rate = 0.92;
+    utterance.pitch = 1;
+    utterance.onstart = () => {
+      if (id !== speakId) return;
+      speaking.value = true;
+    };
+    utterance.onboundary = (event) => {
+      if (id !== speakId || event.name !== "word" || typeof event.charIndex !== "number") return;
+      boundarySeen.value = true;
+      boundaryIndex.value = event.charIndex;
+    };
+    utterance.onend = () => {
+      if (id !== speakId) return;
+      speaking.value = false;
+      if (boundarySeen.value) boundaryIndex.value = text.length;
+    };
+    utterance.onerror = () => {
+      if (id !== speakId) return;
+      speaking.value = false;
+      error.value = "Voice playback failed. You can still read the question and try again.";
+    };
+    window.speechSynthesis.speak(utterance);
+  }
+
+  if (synthesisSupported.value) {
+    window.speechSynthesis.getVoices();
+    window.speechSynthesis.addEventListener("voiceschanged", () => {
+      if (!pendingSpeak || pendingSpeak.id !== speakId) return;
+      const job = pendingSpeak;
+      pendingSpeak = null;
+      playUtterance(job.text, job.id);
+    });
+  }
 
   function ensureRecognition() {
     if (recognition || !recognitionSupported.value) return;
@@ -93,24 +171,24 @@ export function useSpeech() {
 
   function speak(text: string) {
     if (!synthesisSupported.value || !text.trim()) return;
+    const id = ++speakId;
+    error.value = "";
     window.speechSynthesis.cancel();
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = "en-US";
-    utterance.rate = 1;
-    utterance.onstart = () => {
-      speaking.value = true;
-    };
-    utterance.onend = () => {
-      speaking.value = false;
-    };
-    utterance.onerror = () => {
-      speaking.value = false;
-    };
-    window.speechSynthesis.speak(utterance);
+    spokenText.value = text;
+    boundaryIndex.value = 0;
+    boundarySeen.value = false;
+    if (!window.speechSynthesis.getVoices().length) {
+      pendingSpeak = { text, id };
+      return;
+    }
+    pendingSpeak = null;
+    playUtterance(text, id);
   }
 
   function stopSpeaking() {
     if (!synthesisSupported.value) return;
+    speakId += 1;
+    pendingSpeak = null;
     window.speechSynthesis.cancel();
     speaking.value = false;
   }
@@ -121,6 +199,9 @@ export function useSpeech() {
     listening,
     speaking,
     error,
+    spokenText,
+    boundaryIndex,
+    boundarySeen,
     recognitionSupported,
     synthesisSupported,
     start,

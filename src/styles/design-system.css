@@ -2,26 +2,22 @@
 
 @theme {
   --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", system-ui, sans-serif;
-  --color-bg: #0b0714;
-  --color-bg-body: #0e0a18;
-  --color-surface: #141022;
-  --color-text-primary: #f4f1fb;
-  --color-text-secondary: #a79fbe;
-  --color-accent: #a855f7;
-  --color-accent-2: #7c5cff;
-  --color-accent-3: #e879f9;
-  --color-border: rgb(255 255 255 / 0.1);
-  --color-success: #2dd4bf;
+  --color-bg: #121c28;
+  --color-bg-body: #121c28;
+  --color-surface: #1a2734;
+  --color-text-primary: #f4f7fb;
+  --color-text-secondary: #93a4b8;
+  --color-accent: #5c7cfa;
+  --color-accent-2: #4e6ee6;
+  --color-accent-3: #7d97ff;
+  --color-border: rgb(255 255 255 / 0.08);
+  --color-success: #34d399;
   --color-warning: #f59e0b;
-  --color-danger: #f43f5e;
-  --color-muted: #8b849e;
-  --color-glass-bg: rgb(28 22 48 / 0.62);
-  --color-glass-border: rgb(255 255 255 / 0.12);
+  --color-danger: #ff453a;
+  --color-muted: #708298;
+  --color-glass-bg: rgb(26 39 52 / 0.96);
+  --color-glass-border: rgb(255 255 255 / 0.08);
   --shadow-glass:
-    0 16px 40px rgb(0 0 0 / 0.35),
-    inset 0 1px 0 rgb(255 255 255 / 0.08);
-}
-
-:root {
-  --gradient-primary: linear-gradient(120deg, #7c4dff 0%, #a855f7 55%, #d946ef 100%);
+    0 12px 28px rgb(12 20 32 / 0.35),
+    inset 0 1px 0 rgb(255 255 255 / 0.05);
 }

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import { ArrowLeftIcon, HomeIcon } from "@heroicons/vue/24/outline";
+import { ArrowLeftIcon } from "@heroicons/vue/24/outline";
 import AppBottomNav from "./components/AppBottomNav.vue";
 
 const route = useRoute();
@@ -11,6 +11,7 @@ const layoutStyle = ref<Record<string, string>>({});
 const title = computed(() => {
   if (route.path.startsWith("/mode/")) return "Mode Lobby";
   if (route.path.startsWith("/session/")) return "Question Session";
+  if (route.path === "/mock") return "Mock INTVW";
   if (route.path.startsWith("/mock/")) return "Voice Mock";
   if (route.path.startsWith("/summary/")) return "Grade Summary";
   if (route.path.startsWith("/coach")) return "Coach";
@@ -18,7 +19,11 @@ const title = computed(() => {
   return "PrepMate";
 });
 
-const showBack = computed(() => route.path !== "/");
+const isParentModule = computed(() => {
+  const path = route.path;
+  return path === "/mock" || path === "/coach" || path === "/module";
+});
+const showBack = computed(() => route.path !== "/" && !isParentModule.value);
 const showBottomNav = computed(
   () => !route.path.startsWith("/session/") && !route.path.startsWith("/mock/")
 );
@@ -60,9 +65,7 @@ onUnmounted(() => {
       </button>
       <div v-else class="h-9 w-9"></div>
       <p class="m-0 text-sm font-semibold">{{ title }}</p>
-      <button class="pill-button glass h-9 w-9 text-sm" aria-label="Go home" @click="router.push('/')">
-        <HomeIcon class="mx-auto h-4 w-4" aria-hidden="true" />
-      </button>
+      <div class="h-9 w-9"></div>
     </header>
 
     <main class="scroll-area flex flex-col px-4 pb-2">

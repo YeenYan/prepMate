@@ -4,21 +4,21 @@ import { useRoute } from "vue-router";
 import {
   ChatBubbleLeftRightIcon,
   HomeIcon,
-  Squares2X2Icon,
-  UserCircleIcon
+  MicrophoneIcon,
+  Squares2X2Icon
 } from "@heroicons/vue/24/outline";
 import {
   ChatBubbleLeftRightIcon as ChatBubbleLeftRightSolid,
   HomeIcon as HomeSolid,
-  Squares2X2Icon as Squares2X2Solid,
-  UserCircleIcon as UserCircleSolid
+  MicrophoneIcon as MicrophoneSolid,
+  Squares2X2Icon as Squares2X2Solid
 } from "@heroicons/vue/24/solid";
 
 const route = useRoute();
 
 const items = [
   { to: "/", label: "Home", icon: HomeIcon, iconActive: HomeSolid },
-  { to: "/mode/basics", label: "Basics", icon: UserCircleIcon, iconActive: UserCircleSolid },
+  { to: "/mock", label: "Mock INTVW", icon: MicrophoneIcon, iconActive: MicrophoneSolid },
   { to: "/coach", label: "Coach", icon: ChatBubbleLeftRightIcon, iconActive: ChatBubbleLeftRightSolid },
   { to: "/module", label: "Module", icon: Squares2X2Icon, iconActive: Squares2X2Solid }
 ];
@@ -28,9 +28,8 @@ const activePath = computed(() => route.path);
 function isActive(to: string) {
   const path = activePath.value;
   if (to === "/") return path === "/";
-  if (to === "/mode/basics") return path === "/mode/basics" || path.startsWith("/mode/basics/");
   if (to === "/module") {
-    return path === "/module" || (path.startsWith("/mode/") && !path.startsWith("/mode/basics"));
+    return path === "/module" || path.startsWith("/mode/");
   }
   return path === to || path.startsWith(`${to}/`);
 }
@@ -55,7 +54,7 @@ function isActive(to: string) {
             class="h-5 w-5"
             aria-hidden="true"
           />
-          <span class="mt-1">{{ item.label }}</span>
+          <span class="mt-1 whitespace-nowrap text-[10px]">{{ item.label }}</span>
         </RouterLink>
       </div>
     </div>
