@@ -39,6 +39,16 @@ interface SpeechRecognition extends EventTarget {
 
 type SpeechRecognitionType = new () => SpeechRecognition;
 
+const SILENT_WAV =
+  "data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=";
+let unlockAudio: HTMLAudioElement | null = null;
+
+export function unlockInterviewAudio() {
+  if (typeof Audio === "undefined") return;
+  if (!unlockAudio) unlockAudio = new Audio(SILENT_WAV);
+  unlockAudio.play().catch(() => undefined);
+}
+
 declare global {
   interface Window {
     webkitSpeechRecognition?: SpeechRecognitionType;
@@ -79,7 +89,7 @@ export function useSpeech() {
     character_end_times_seconds: number[];
   }
 
-  const audioCache = new Map<string, { audioBase64: string; mimeType: string; alignment: SpeechAlignment | null }>();
+  const audioCache = new Map<string, { blob: Blob; alignment: SpeechAlignment | null }>();
 
   function stopAudio() {
     if (highlightFrame) cancelAnimationFrame(highlightFrame);
@@ -118,18 +128,12 @@ export function useSpeech() {
     highlightFrame = requestAnimationFrame(tick);
   }
 
-  async function playClip(
-    text: string,
-    id: number,
-    clip: { audioBase64: string; mimeType: string; alignment: SpeechAlignment | null }
-  ) {
+  async function playClip(text: string, id: number, clip: { blob: Blob; alignment: SpeechAlignment | null }) {
     if (id !== speakId) return;
-    const bytes = Uint8Array.from(atob(clip.audioBase64), (char) => char.charCodeAt(0));
-    const blob = new Blob([bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength)], {
-      type: clip.mimeType
-    });
-    objectUrl = URL.createObjectURL(blob);
+    objectUrl = URL.createObjectURL(clip.blob);
     const element = new Audio(objectUrl);
+    element.setAttribute("playsinline", "true");
+    element.setAttribute("webkit-playsinline", "true");
     audio = element;
     element.onplaying = () => {
       if (id !== speakId) return;
@@ -334,23 +338,22 @@ export function useSpeech() {
           body: JSON.stringify({ text: spoken }),
           signal: controller.signal
         });
-        const data = (await response.json().catch(() => null)) as {
-          error?: string;
-          audioBase64?: string;
-          mimeType?: string;
-          alignment?: SpeechAlignment | null;
-        } | null;
         if (id !== speakId) return;
-        if (!response.ok || !data?.audioBase64) {
+        const type = response.headers.get("content-type") || "";
+        if (!response.ok || !type.includes("audio")) {
+          const data = (await response.json().catch(() => null)) as { error?: string } | null;
           preparing.value = false;
           error.value = data?.error || "Could not generate the interviewer voice.";
           return;
         }
-        clip = {
-          audioBase64: data.audioBase64,
-          mimeType: data.mimeType || "audio/wav",
-          alignment: data.alignment || null
-        };
+        const blob = await response.blob();
+        if (id !== speakId) return;
+        if (blob.size < 44) {
+          preparing.value = false;
+          error.value = "Could not generate the interviewer voice.";
+          return;
+        }
+        clip = { blob, alignment: null };
         audioCache.set(spoken, clip);
       }
       await playClip(spoken, id, clip);

@@ -6,7 +6,7 @@ import { MicrophoneIcon } from "@heroicons/vue/24/solid";
 import HaloOrb from "../components/HaloOrb.vue";
 import ScoreRing from "../components/ScoreRing.vue";
 import { useCoach } from "../composables/useCoach";
-import { useSpeech } from "../composables/useSpeech";
+import { unlockInterviewAudio, useSpeech } from "../composables/useSpeech";
 import { useBanksStore } from "../stores/useBanksStore";
 import { useCoachStore } from "../stores/useCoachStore";
 import { useSessionStore } from "../stores/useSessionStore";
@@ -203,6 +203,7 @@ function nextQuestion() {
 
 function repeatQuestion() {
   if (speech.listening.value || submitting.value) return;
+  unlockInterviewAudio();
   askCurrentQuestion();
 }
 
@@ -252,7 +253,6 @@ onMounted(() => {
   if (mode.value !== "basics" && !difficulty.value) return;
 
   sessionStore.start(mode.value, bank.value, difficulty.value);
-  speakCoach(banksStore.coach.persona.greeting);
   askCurrentQuestion();
 });
 

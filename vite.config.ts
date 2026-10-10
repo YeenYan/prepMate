@@ -35,6 +35,7 @@ export default defineConfig(({ mode }) => ({
             ? ["**/*.{js,css,html,ico,png,svg,webp,woff2,json}"]
             : [],
         navigateFallback: "index.html",
+        navigateFallbackDenylist: [/^\/api\//],
         runtimeCaching: [
           {
             urlPattern: ({ request }) => request.destination === "document",

@@ -1,4 +1,5 @@
 import { spawn, type ChildProcessWithoutNullStreams } from "node:child_process";
+import fs from "node:fs";
 import path from "node:path";
 import type { IncomingMessage, ServerResponse } from "node:http";
 import type { Connect, Plugin } from "vite";
@@ -6,7 +7,8 @@ import type { Connect, Plugin } from "vite";
 const SCRIPT = path.join(process.cwd(), "server", "kokoroSpeak.mjs");
 
 interface SpeechResult {
-  audioBase64?: string;
+  ready?: boolean;
+  file?: string;
   error?: string;
 }
 
@@ -17,6 +19,7 @@ interface SpeechJob {
 }
 
 let worker: ChildProcessWithoutNullStreams | null = null;
+let workerReady = false;
 let active: SpeechJob | null = null;
 let buffer = "";
 const queue: SpeechJob[] = [];
@@ -24,6 +27,7 @@ const queue: SpeechJob[] = [];
 function stopWorker() {
   const current = worker;
   worker = null;
+  workerReady = false;
   buffer = "";
   const leftover = active ? [active, ...queue.splice(0)] : queue.splice(0);
   active = null;
@@ -44,14 +48,23 @@ function finishActive(result: SpeechResult) {
 }
 
 function flush() {
-  const newline = buffer.indexOf("\n");
-  if (newline < 0 || !active) return;
-  const line = buffer.slice(0, newline);
-  buffer = buffer.slice(newline + 1);
-  try {
-    finishActive(JSON.parse(line) as SpeechResult);
-  } catch {
-    finishActive({ error: "Could not generate the interviewer voice." });
+  while (true) {
+    const newline = buffer.indexOf("\n");
+    if (newline < 0) return;
+    const line = buffer.slice(0, newline);
+    buffer = buffer.slice(newline + 1);
+    let message: SpeechResult;
+    try {
+      message = JSON.parse(line) as SpeechResult;
+    } catch {
+      if (active) finishActive({ error: "Could not generate the interviewer voice." });
+      continue;
+    }
+    if (message.ready) {
+      workerReady = true;
+      continue;
+    }
+    if (active) finishActive(message);
   }
 }
 
@@ -62,11 +75,13 @@ function ensureWorker() {
     stdio: ["pipe", "pipe", "pipe"]
   });
   worker = child;
+  workerReady = false;
   buffer = "";
   child.stdout.setEncoding("utf8");
   child.stdout.on("data", (chunk: string) => {
     buffer += chunk;
     flush();
+    pump();
   });
   child.on("error", () => {
     if (worker === child) worker = null;
@@ -81,13 +96,14 @@ function ensureWorker() {
 
 function pump() {
   if (active || queue.length === 0) return;
+  const child = ensureWorker();
+  if (!workerReady) return;
   const job = queue.shift();
   if (!job) return;
   active = job;
   job.timer = setTimeout(() => {
     if (active === job) stopWorker();
   }, 120_000);
-  const child = ensureWorker();
   child.stdin.write(`${JSON.stringify({ text: job.text })}\n`);
   flush();
 }
@@ -137,6 +153,11 @@ function attach(middlewares: Connect.Server) {
 }
 
 async function handle(req: IncomingMessage, res: ServerResponse) {
+  let clientGone = false;
+  res.on("close", () => {
+    if (!res.writableEnded) clientGone = true;
+  });
+
   try {
     const raw = await readBody(req);
     const payload = JSON.parse(raw) as { text?: unknown };
@@ -147,11 +168,20 @@ async function handle(req: IncomingMessage, res: ServerResponse) {
     }
 
     const result = await synthesize(text);
-    if (!result.audioBase64) {
+    if (clientGone || res.writableEnded) {
+      if (result.file) fs.rmSync(result.file, { force: true });
+      return;
+    }
+    if (!result.file) {
       sendJson(res, 500, { error: result.error || "Could not generate the interviewer voice." });
       return;
     }
-    sendJson(res, 200, { audioBase64: result.audioBase64, mimeType: "audio/wav", alignment: null });
+    const wav = fs.readFileSync(result.file);
+    fs.rmSync(result.file, { force: true });
+    res.statusCode = 200;
+    res.setHeader("Content-Type", "audio/wav");
+    res.setHeader("Cache-Control", "no-store");
+    res.end(wav);
   } catch (error) {
     if (error instanceof SyntaxError || (error instanceof Error && error.message === "too-large")) {
       sendJson(res, 400, { error: "The question text could not be spoken." });

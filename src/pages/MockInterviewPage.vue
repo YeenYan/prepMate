@@ -3,6 +3,7 @@ import { computed, onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
 import { MicrophoneIcon, PencilSquareIcon } from "@heroicons/vue/24/outline";
 import ModuleCategoryCard from "../components/ModuleCategoryCard.vue";
+import { unlockInterviewAudio } from "../composables/useSpeech";
 import { useBanksStore } from "../stores/useBanksStore";
 import type { DifficultyKey, ModeKey } from "../types/interview";
 import { DIFFICULTY_KEYS, MODE_KEYS } from "../types/interview";
@@ -81,6 +82,7 @@ function onPrimary() {
     return;
   }
   const base = kind.value === "voice" ? "/mock" : "/session";
+  if (kind.value === "voice") unlockInterviewAudio();
   if (selectedMode.value === "basics") {
     router.push(`${base}/basics`);
   } else if (selectedLevel.value) {

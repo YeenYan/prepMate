@@ -1,3 +1,5 @@
+import fs from "node:fs";
+import os from "node:os";
 import path from "node:path";
 import readline from "node:readline";
 import { env, RawAudio } from "@huggingface/transformers";
@@ -7,6 +9,10 @@ const MODEL_ID = "onnx-community/Kokoro-82M-v1.0-ONNX";
 const VOICE = "af_heart";
 
 env.cacheDir = path.join(process.cwd(), ".cache", "kokoro");
+
+function writeLine(payload) {
+  fs.writeSync(1, `${JSON.stringify(payload)}\n`);
+}
 
 const queued = [];
 let waitForLine = null;
@@ -33,6 +39,7 @@ const tts = await KokoroTTS.from_pretrained(MODEL_ID, {
   dtype: "q8",
   device: "cpu"
 });
+writeLine({ ready: true });
 
 function sentences(text) {
   const parts = text
@@ -59,7 +66,9 @@ async function synthesize(text) {
     samples.set(chunk, offset);
     offset += chunk.length;
   }
-  return Buffer.from(new RawAudio(samples, sampleRate).toWav()).toString("base64");
+  const file = path.join(os.tmpdir(), `prepmate-${Date.now()}-${Math.random().toString(16).slice(2)}.wav`);
+  fs.writeFileSync(file, Buffer.from(new RawAudio(samples, sampleRate).toWav()));
+  return file;
 }
 
 while (true) {
@@ -70,11 +79,11 @@ while (true) {
     const payload = JSON.parse(trimmed);
     const text = typeof payload.text === "string" ? payload.text.trim() : "";
     if (!text) throw new Error("The question text could not be spoken.");
-    const audioBase64 = await synthesize(text);
-    if (!audioBase64) throw new Error("Could not generate the interviewer voice.");
-    process.stdout.write(`${JSON.stringify({ audioBase64 })}\n`);
+    const file = await synthesize(text);
+    if (!file) throw new Error("Could not generate the interviewer voice.");
+    writeLine({ file });
   } catch (error) {
     const message = error instanceof Error ? error.message : "Could not generate the interviewer voice.";
-    process.stdout.write(`${JSON.stringify({ error: message.slice(0, 160) })}\n`);
+    writeLine({ error: message.slice(0, 160) });
   }
 }
