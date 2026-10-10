@@ -42,11 +42,28 @@ type SpeechRecognitionType = new () => SpeechRecognition;
 const SILENT_WAV =
   "data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=";
 let unlockAudio: HTMLAudioElement | null = null;
+let serverVoiceAvailable = true;
 
 export function unlockInterviewAudio() {
-  if (typeof Audio === "undefined") return;
-  if (!unlockAudio) unlockAudio = new Audio(SILENT_WAV);
-  unlockAudio.play().catch(() => undefined);
+  if (typeof Audio !== "undefined") {
+    if (!unlockAudio) unlockAudio = new Audio(SILENT_WAV);
+    unlockAudio.play().catch(() => undefined);
+  }
+  if ("speechSynthesis" in window) {
+    const primer = new SpeechSynthesisUtterance(" ");
+    primer.volume = 0;
+    window.speechSynthesis.speak(primer);
+  }
+}
+
+function pickDeviceVoice() {
+  const voices = window.speechSynthesis.getVoices().filter((voice) => voice.lang.startsWith("en"));
+  const preferred = ["Ava (Premium)", "Ava (Enhanced)", "Samantha (Enhanced)", "Zoe (Premium)", "Ava", "Samantha"];
+  for (const name of preferred) {
+    const match = voices.find((voice) => voice.name === name);
+    if (match) return match;
+  }
+  return voices.find((voice) => voice.lang === "en-US") || voices[0] || null;
 }
 
 declare global {
@@ -95,8 +112,12 @@ export function useSpeech() {
     if (highlightFrame) cancelAnimationFrame(highlightFrame);
     highlightFrame = 0;
     if (audio) {
+      audio.onplaying = null;
+      audio.onended = null;
+      audio.onerror = null;
       audio.pause();
-      audio.src = "";
+      audio.removeAttribute("src");
+      audio.load();
       audio = null;
     }
     if (objectUrl) {
@@ -131,7 +152,8 @@ export function useSpeech() {
   async function playClip(text: string, id: number, clip: { blob: Blob; alignment: SpeechAlignment | null }) {
     if (id !== speakId) return;
     objectUrl = URL.createObjectURL(clip.blob);
-    const element = new Audio(objectUrl);
+    const element = unlockAudio || new Audio();
+    element.src = objectUrl;
     element.setAttribute("playsinline", "true");
     element.setAttribute("webkit-playsinline", "true");
     audio = element;
@@ -314,6 +336,44 @@ export function useSpeech() {
     interimTranscript.value = "";
   }
 
+  function speakWithDevice(text: string, id: number) {
+    if (!("speechSynthesis" in window)) {
+      preparing.value = false;
+      error.value = "Could not generate the interviewer voice.";
+      return;
+    }
+    const synth = window.speechSynthesis;
+    synth.cancel();
+    const utterance = new SpeechSynthesisUtterance(text);
+    const voice = pickDeviceVoice();
+    if (voice) utterance.voice = voice;
+    utterance.lang = voice?.lang || "en-US";
+    utterance.rate = 0.98;
+    utterance.onstart = () => {
+      if (id !== speakId) return;
+      preparing.value = false;
+      speaking.value = true;
+    };
+    utterance.onboundary = (event) => {
+      if (id !== speakId) return;
+      boundaryIndex.value = event.charIndex;
+      boundarySeen.value = true;
+    };
+    utterance.onend = () => {
+      if (id !== speakId) return;
+      speaking.value = false;
+      preparing.value = false;
+      boundaryIndex.value = text.length;
+    };
+    utterance.onerror = (event) => {
+      if (id !== speakId || event.error === "canceled" || event.error === "interrupted") return;
+      speaking.value = false;
+      preparing.value = false;
+      error.value = "Tap replay to hear the question.";
+    };
+    synth.speak(utterance);
+  }
+
   async function speak(text: string) {
     const spoken = text.trim();
     if (!spoken) return;
@@ -329,9 +389,10 @@ export function useSpeech() {
     speaking.value = false;
     preparing.value = true;
 
-    try {
-      let clip = audioCache.get(spoken);
-      if (!clip) {
+    let clip = audioCache.get(spoken);
+    if (!clip && serverVoiceAvailable) {
+      const timeout = window.setTimeout(() => controller.abort(), 20_000);
+      try {
         const response = await fetch("/api/tts", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -339,42 +400,38 @@ export function useSpeech() {
           cache: "no-store",
           signal: controller.signal
         });
-        if (id !== speakId) return;
         const bytes = new Uint8Array(await response.arrayBuffer());
-        if (id !== speakId) return;
         const isWav =
-          bytes.length > 12 &&
+          bytes.length > 44 &&
           bytes[0] === 82 &&
           bytes[1] === 73 &&
           bytes[2] === 70 &&
           bytes[3] === 70;
-        if (!response.ok || !isWav) {
-          let message = "Could not generate the interviewer voice.";
-          try {
-            const data = JSON.parse(new TextDecoder().decode(bytes)) as { error?: string };
-            if (data?.error) message = data.error;
-          } catch {
-            message = "Could not generate the interviewer voice.";
-          }
-          preparing.value = false;
-          error.value = message;
-          return;
+        if (response.ok && isWav) {
+          clip = { blob: new Blob([bytes], { type: "audio/wav" }), alignment: null };
+          audioCache.set(spoken, clip);
+        } else if (response.status === 404 || response.status === 405 || response.ok) {
+          serverVoiceAvailable = false;
         }
-        clip = { blob: new Blob([bytes], { type: "audio/wav" }), alignment: null };
-        audioCache.set(spoken, clip);
+      } catch {
+        clip = undefined;
+      } finally {
+        window.clearTimeout(timeout);
       }
-      await playClip(spoken, id, clip);
-    } catch (err) {
-      if (id !== speakId || (err instanceof DOMException && err.name === "AbortError")) return;
-      preparing.value = false;
-      speaking.value = false;
-      error.value = "Could not generate the interviewer voice.";
     }
+
+    if (id !== speakId) return;
+    if (clip) {
+      await playClip(spoken, id, clip);
+      return;
+    }
+    speakWithDevice(spoken, id);
   }
 
   function stopSpeaking() {
     speakId += 1;
     speakAbort?.abort();
+    if ("speechSynthesis" in window) window.speechSynthesis.cancel();
     stopAudio();
     preparing.value = false;
     speaking.value = false;
