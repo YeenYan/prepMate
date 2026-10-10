@@ -336,24 +336,31 @@ export function useSpeech() {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ text: spoken }),
+          cache: "no-store",
           signal: controller.signal
         });
         if (id !== speakId) return;
-        const type = response.headers.get("content-type") || "";
-        if (!response.ok || !type.includes("audio")) {
-          const data = (await response.json().catch(() => null)) as { error?: string } | null;
-          preparing.value = false;
-          error.value = data?.error || "Could not generate the interviewer voice.";
-          return;
-        }
-        const blob = await response.blob();
+        const bytes = new Uint8Array(await response.arrayBuffer());
         if (id !== speakId) return;
-        if (blob.size < 44) {
+        const isWav =
+          bytes.length > 12 &&
+          bytes[0] === 82 &&
+          bytes[1] === 73 &&
+          bytes[2] === 70 &&
+          bytes[3] === 70;
+        if (!response.ok || !isWav) {
+          let message = "Could not generate the interviewer voice.";
+          try {
+            const data = JSON.parse(new TextDecoder().decode(bytes)) as { error?: string };
+            if (data?.error) message = data.error;
+          } catch {
+            message = "Could not generate the interviewer voice.";
+          }
           preparing.value = false;
-          error.value = "Could not generate the interviewer voice.";
+          error.value = message;
           return;
         }
-        clip = { blob, alignment: null };
+        clip = { blob: new Blob([bytes], { type: "audio/wav" }), alignment: null };
         audioCache.set(spoken, clip);
       }
       await playClip(spoken, id, clip);

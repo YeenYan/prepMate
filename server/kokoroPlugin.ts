@@ -153,11 +153,6 @@ function attach(middlewares: Connect.Server) {
 }
 
 async function handle(req: IncomingMessage, res: ServerResponse) {
-  let clientGone = false;
-  res.on("close", () => {
-    if (!res.writableEnded) clientGone = true;
-  });
-
   try {
     const raw = await readBody(req);
     const payload = JSON.parse(raw) as { text?: unknown };
@@ -168,10 +163,6 @@ async function handle(req: IncomingMessage, res: ServerResponse) {
     }
 
     const result = await synthesize(text);
-    if (clientGone || res.writableEnded) {
-      if (result.file) fs.rmSync(result.file, { force: true });
-      return;
-    }
     if (!result.file) {
       sendJson(res, 500, { error: result.error || "Could not generate the interviewer voice." });
       return;
