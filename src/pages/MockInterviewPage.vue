@@ -113,16 +113,16 @@ function onPrimary() {
       {{ banksStore.error }}
     </p>
 
-    <Transition name="sheet">
-      <div v-if="open" class="fixed inset-0 z-[80]">
-      <button class="sheet-backdrop absolute inset-0 bg-black/40" aria-label="Close" @click="closeModal"></button>
+    <Teleport to="body">
+    <Transition name="popup">
+      <div v-if="open" class="fixed inset-0 z-[80] flex items-center justify-center px-5">
+      <button class="popup-backdrop absolute inset-0 bg-black/50" aria-label="Close" @click="closeModal"></button>
       <div
-        class="sheet-panel absolute inset-x-0 bottom-0 mx-auto w-full max-w-sm rounded-t-[28px] border border-white/10 bg-[var(--color-surface)] px-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-3"
+        class="popup-panel relative max-h-[85vh] w-full max-w-sm overflow-y-auto rounded-[28px] border border-white/10 bg-[var(--color-surface)] p-5"
         role="dialog"
         aria-modal="true"
         :aria-label="kind === 'voice' ? 'Voice mock' : 'Non-voice'"
       >
-        <div class="mx-auto mb-4 h-1 w-10 rounded-full bg-white/20"></div>
         <p class="m-0 text-base font-semibold">{{ kind === "voice" ? "Voice mock" : "Non-voice" }}</p>
         <p class="mb-0 mt-1 text-sm text-[var(--color-text-secondary)]">
           {{ step === "module" ? "Choose a module" : "Choose a level" }}
@@ -187,27 +187,29 @@ function onPrimary() {
       </div>
       </div>
     </Transition>
+    </Teleport>
   </section>
 </template>
 
 <style scoped>
-.sheet-enter-active .sheet-backdrop,
-.sheet-leave-active .sheet-backdrop {
-  transition: opacity 0.34s ease;
+.popup-enter-active .popup-backdrop,
+.popup-leave-active .popup-backdrop {
+  transition: opacity 0.28s ease;
 }
 
-.sheet-enter-active .sheet-panel,
-.sheet-leave-active .sheet-panel {
-  transition: transform 0.42s cubic-bezier(0.22, 1, 0.36, 1);
+.popup-enter-active .popup-panel,
+.popup-leave-active .popup-panel {
+  transition: transform 0.38s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.38s ease;
 }
 
-.sheet-enter-from .sheet-backdrop,
-.sheet-leave-to .sheet-backdrop {
+.popup-enter-from .popup-backdrop,
+.popup-leave-to .popup-backdrop {
   opacity: 0;
 }
 
-.sheet-enter-from .sheet-panel,
-.sheet-leave-to .sheet-panel {
-  transform: translateY(100%);
+.popup-enter-from .popup-panel,
+.popup-leave-to .popup-panel {
+  opacity: 0;
+  transform: translateY(28px);
 }
 </style>
