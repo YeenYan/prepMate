@@ -87,7 +87,7 @@ function normalizeBank(mode: ModeKey, raw: RawModeBank): ModeBank {
     title: String(raw.title || mode).trim() || mode,
     description: String(raw.description || "").trim(),
     questions: raw.questions.map((question) =>
-      normalizeQuestion(question as Record<string, unknown>, mode)
+      normalizeQuestion(question as unknown as Record<string, unknown>, mode)
     )
   };
 }

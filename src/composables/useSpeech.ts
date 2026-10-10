@@ -1,5 +1,42 @@
 import { computed, ref } from "vue";
 
+interface SpeechRecognitionAlternative {
+  transcript: string;
+  confidence: number;
+}
+
+interface SpeechRecognitionResult {
+  isFinal: boolean;
+  length: number;
+  [index: number]: SpeechRecognitionAlternative;
+}
+
+interface SpeechRecognitionResultList {
+  length: number;
+  [index: number]: SpeechRecognitionResult;
+}
+
+interface SpeechRecognitionEvent extends Event {
+  resultIndex: number;
+  results: SpeechRecognitionResultList;
+}
+
+interface SpeechRecognitionErrorEvent extends Event {
+  error: string;
+}
+
+interface SpeechRecognition extends EventTarget {
+  lang: string;
+  interimResults: boolean;
+  continuous: boolean;
+  maxAlternatives: number;
+  onresult: ((event: SpeechRecognitionEvent) => void) | null;
+  onerror: ((event: SpeechRecognitionErrorEvent) => void) | null;
+  onend: (() => void) | null;
+  start(): void;
+  stop(): void;
+}
+
 type SpeechRecognitionType = new () => SpeechRecognition;
 
 declare global {
@@ -18,178 +55,318 @@ export function useSpeech() {
   const spokenText = ref("");
   const boundaryIndex = ref(0);
   const boundarySeen = ref(false);
+  const preparing = ref(false);
 
   const recognitionSupported = computed(
     () => Boolean(window.SpeechRecognition || window.webkitSpeechRecognition)
   );
-  const synthesisSupported = computed(() => "speechSynthesis" in window);
 
   let recognition: SpeechRecognition | null = null;
+  let keepListening = false;
+  let sessionBase = "";
+  let sessionFinal = "";
+  let restartTimer = 0;
+  let restartAttempts = 0;
   let speakId = 0;
-  let pendingSpeak: { text: string; id: number } | null = null;
+  let audio: HTMLAudioElement | null = null;
+  let objectUrl = "";
+  let highlightFrame = 0;
+  let speakAbort: AbortController | null = null;
 
-  const preferredNames = ["ava", "zoe", "allison", "samantha", "nicky"];
-
-  function voiceScore(voice: SpeechSynthesisVoice) {
-    const name = voice.name.toLowerCase();
-    const uri = voice.voiceURI.toLowerCase();
-    const lang = voice.lang.toLowerCase().replace("_", "-");
-    if (!lang.startsWith("en")) return 0;
-
-    let score = lang === "en-us" ? 40 : 12;
-    if (uri.includes("premium") || name.includes("premium")) score += 80;
-    else if (uri.includes("enhanced") || name.includes("enhanced")) score += 55;
-    if (uri.includes("siri") || name.includes("siri")) score += 25;
-    if (uri.includes("eloquence") || name.includes("eloquence") || name.includes("compact")) score -= 30;
-    if (name.includes("natural") || name.includes("neural")) score += 35;
-
-    const nameRank = preferredNames.findIndex((item) => name.includes(item));
-    if (nameRank >= 0) score += 20 - nameRank;
-    return score;
+  interface SpeechAlignment {
+    characters: string[];
+    character_start_times_seconds: number[];
+    character_end_times_seconds: number[];
   }
 
-  function bestVoice() {
-    const voices = window.speechSynthesis.getVoices();
-    let chosen: SpeechSynthesisVoice | null = null;
-    let chosenScore = 0;
-    for (const voice of voices) {
-      const score = voiceScore(voice);
-      if (score > chosenScore) {
-        chosen = voice;
-        chosenScore = score;
-      }
+  const audioCache = new Map<string, { audioBase64: string; mimeType: string; alignment: SpeechAlignment | null }>();
+
+  function stopAudio() {
+    if (highlightFrame) cancelAnimationFrame(highlightFrame);
+    highlightFrame = 0;
+    if (audio) {
+      audio.pause();
+      audio.src = "";
+      audio = null;
     }
-    return chosen;
+    if (objectUrl) {
+      URL.revokeObjectURL(objectUrl);
+      objectUrl = "";
+    }
   }
 
-  function playUtterance(text: string, id: number) {
-    const utterance = new SpeechSynthesisUtterance(text);
-    const voice = bestVoice();
-    if (voice) utterance.voice = voice;
-    utterance.lang = voice?.lang || "en-US";
-    utterance.rate = 0.92;
-    utterance.pitch = 1;
-    utterance.onstart = () => {
+  function indexAtTime(alignment: SpeechAlignment, time: number) {
+    const starts = alignment.character_start_times_seconds;
+    let index = 0;
+    for (let i = 0; i < starts.length; i += 1) {
+      if (starts[i] <= time) index = i;
+      else break;
+    }
+    return index;
+  }
+
+  function trackHighlight(id: number, element: HTMLAudioElement, alignment: SpeechAlignment | null) {
+    const tick = () => {
+      if (id !== speakId || !audio) return;
+      if (alignment) {
+        const index = indexAtTime(alignment, element.currentTime);
+        if (boundaryIndex.value !== index) boundaryIndex.value = index;
+        if (!boundarySeen.value) boundarySeen.value = true;
+      }
+      if (!element.paused && !element.ended) highlightFrame = requestAnimationFrame(tick);
+    };
+    highlightFrame = requestAnimationFrame(tick);
+  }
+
+  async function playClip(
+    text: string,
+    id: number,
+    clip: { audioBase64: string; mimeType: string; alignment: SpeechAlignment | null }
+  ) {
+    if (id !== speakId) return;
+    const bytes = Uint8Array.from(atob(clip.audioBase64), (char) => char.charCodeAt(0));
+    const blob = new Blob([bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength)], {
+      type: clip.mimeType
+    });
+    objectUrl = URL.createObjectURL(blob);
+    const element = new Audio(objectUrl);
+    audio = element;
+    element.onplaying = () => {
       if (id !== speakId) return;
+      preparing.value = false;
       speaking.value = true;
+      trackHighlight(id, element, clip.alignment);
     };
-    utterance.onboundary = (event) => {
-      if (id !== speakId || event.name !== "word" || typeof event.charIndex !== "number") return;
-      boundarySeen.value = true;
-      boundaryIndex.value = event.charIndex;
-    };
-    utterance.onend = () => {
+    element.onended = () => {
       if (id !== speakId) return;
       speaking.value = false;
-      if (boundarySeen.value) boundaryIndex.value = text.length;
+      preparing.value = false;
+      if (clip.alignment) boundaryIndex.value = text.length;
     };
-    utterance.onerror = () => {
+    element.onerror = () => {
       if (id !== speakId) return;
       speaking.value = false;
+      preparing.value = false;
       error.value = "Voice playback failed. You can still read the question and try again.";
     };
-    window.speechSynthesis.speak(utterance);
+    try {
+      await element.play();
+    } catch {
+      if (id !== speakId) return;
+      speaking.value = false;
+      preparing.value = false;
+      error.value = "Tap replay to hear the question.";
+    }
   }
 
-  if (synthesisSupported.value) {
-    window.speechSynthesis.getVoices();
-    window.speechSynthesis.addEventListener("voiceschanged", () => {
-      if (!pendingSpeak || pendingSpeak.id !== speakId) return;
-      const job = pendingSpeak;
-      pendingSpeak = null;
-      playUtterance(job.text, job.id);
-    });
+  function joinText(...parts: string[]) {
+    return parts
+      .map((part) => part.trim())
+      .filter((part) => part.length > 0)
+      .join(" ")
+      .replace(/\s+/g, " ")
+      .trim();
   }
 
-  function ensureRecognition() {
-    if (recognition || !recognitionSupported.value) return;
-    const Constructor = window.SpeechRecognition || window.webkitSpeechRecognition;
-    if (!Constructor) return;
-    recognition = new Constructor();
-    recognition.lang = "en-US";
-    recognition.interimResults = true;
-    recognition.continuous = true;
+  function bestTranscript(result: SpeechRecognitionResult) {
+    let best = result[0];
+    for (let i = 1; i < result.length; i += 1) {
+      const alternative = result[i];
+      if (!alternative) continue;
+      if ((alternative.confidence || 0) > (best?.confidence || 0)) best = alternative;
+    }
+    return (best?.transcript || "").replace(/\s+/g, " ").trim();
+  }
 
-    recognition.onresult = (event) => {
-      let finalText = "";
-      let interimText = "";
-      for (let i = event.resultIndex; i < event.results.length; i += 1) {
-        const value = event.results[i][0]?.transcript || "";
-        if (event.results[i].isFinal) {
-          finalText += value;
-        } else {
-          interimText += value;
+  function commitSession() {
+    const combined = joinText(sessionBase, sessionFinal, interimTranscript.value);
+    sessionBase = combined;
+    sessionFinal = "";
+    transcript.value = combined;
+    interimTranscript.value = "";
+  }
+
+  function handleResult(event: SpeechRecognitionEvent) {
+    restartAttempts = 0;
+    let finalText = "";
+    let interimText = "";
+    for (let i = 0; i < event.results.length; i += 1) {
+      const result = event.results[i];
+      if (!result) continue;
+      const value = bestTranscript(result);
+      if (!value) continue;
+      if (result.isFinal) finalText = joinText(finalText, value);
+      else interimText = joinText(interimText, value);
+    }
+    sessionFinal = finalText;
+    transcript.value = joinText(sessionBase, sessionFinal);
+    interimTranscript.value = interimText;
+  }
+
+  function handleError(event: SpeechRecognitionErrorEvent) {
+    if (event.error === "not-allowed" || event.error === "service-not-allowed" || event.error === "audio-capture") {
+      keepListening = false;
+      listening.value = false;
+      error.value =
+        event.error === "audio-capture"
+          ? "No microphone was found. You can type your answer instead."
+          : "Microphone permission was denied. Enable mic access in browser settings or use typing mode.";
+      return;
+    }
+    if (keepListening) return;
+    if (event.error !== "aborted" && event.error !== "no-speech") {
+      error.value = event.error || "Voice recognition failed.";
+    }
+  }
+
+  function scheduleRestart() {
+    window.clearTimeout(restartTimer);
+    restartTimer = window.setTimeout(() => {
+      if (!keepListening) return;
+      const next = createRecognition();
+      if (!next) return;
+      recognition = next;
+      try {
+        next.start();
+        restartAttempts = 0;
+      } catch (err) {
+        const message = err instanceof Error ? err.message : "";
+        if (/already started/i.test(message)) return;
+        restartAttempts += 1;
+        if (restartAttempts < 8) scheduleRestart();
+        else {
+          keepListening = false;
+          listening.value = false;
+          error.value = "The microphone stopped. Tap it to continue your answer.";
         }
       }
-      if (finalText) transcript.value = `${transcript.value} ${finalText}`.trim();
-      interimTranscript.value = interimText.trim();
-    };
+    }, 300);
+  }
 
-    recognition.onerror = (event) => {
-      if (event.error === "not-allowed" || event.error === "service-not-allowed") {
-        error.value =
-          "Microphone permission was denied. Enable mic access in browser settings or use typing mode.";
-      } else if (event.error === "no-speech") {
-        error.value = "No speech detected. Try speaking again or type your answer.";
-      } else {
-        error.value = event.error || "Voice recognition failed.";
-      }
+  function handleEnd() {
+    commitSession();
+    if (!keepListening) {
       listening.value = false;
-    };
+      return;
+    }
+    scheduleRestart();
+  }
 
-    recognition.onend = () => {
-      listening.value = false;
-    };
+  function createRecognition() {
+    const Constructor = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!Constructor) return null;
+    const next = new Constructor();
+    next.lang = "en-US";
+    next.interimResults = true;
+    next.continuous = true;
+    next.maxAlternatives = 3;
+    next.onresult = handleResult;
+    next.onerror = handleError;
+    next.onend = handleEnd;
+    return next;
   }
 
   function start() {
     error.value = "";
-    ensureRecognition();
+    keepListening = true;
+    window.clearTimeout(restartTimer);
+    recognition = createRecognition();
     if (!recognition) {
       error.value = "Speech recognition is not supported on this device.";
+      keepListening = false;
       return;
     }
     try {
       recognition.start();
       listening.value = true;
     } catch (err) {
-      error.value = err instanceof Error ? err.message : "Failed to start microphone.";
+      const message = err instanceof Error ? err.message : "";
+      if (/already started/i.test(message)) {
+        listening.value = true;
+        return;
+      }
+      error.value = message || "Failed to start microphone.";
+      keepListening = false;
       listening.value = false;
     }
   }
 
   function stop() {
-    if (!recognition) return;
-    recognition.stop();
+    keepListening = false;
+    window.clearTimeout(restartTimer);
+    commitSession();
+    try {
+      recognition?.stop();
+    } catch {
+      listening.value = false;
+    }
     listening.value = false;
   }
 
   function clearTranscript() {
+    sessionBase = "";
+    sessionFinal = "";
     transcript.value = "";
     interimTranscript.value = "";
   }
 
-  function speak(text: string) {
-    if (!synthesisSupported.value || !text.trim()) return;
+  async function speak(text: string) {
+    const spoken = text.trim();
+    if (!spoken) return;
+    speakAbort?.abort();
+    stopAudio();
     const id = ++speakId;
+    const controller = new AbortController();
+    speakAbort = controller;
     error.value = "";
-    window.speechSynthesis.cancel();
-    spokenText.value = text;
+    spokenText.value = spoken;
     boundaryIndex.value = 0;
     boundarySeen.value = false;
-    if (!window.speechSynthesis.getVoices().length) {
-      pendingSpeak = { text, id };
-      return;
+    speaking.value = false;
+    preparing.value = true;
+
+    try {
+      let clip = audioCache.get(spoken);
+      if (!clip) {
+        const response = await fetch("/api/tts", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ text: spoken }),
+          signal: controller.signal
+        });
+        const data = (await response.json().catch(() => null)) as {
+          error?: string;
+          audioBase64?: string;
+          mimeType?: string;
+          alignment?: SpeechAlignment | null;
+        } | null;
+        if (id !== speakId) return;
+        if (!response.ok || !data?.audioBase64) {
+          preparing.value = false;
+          error.value = data?.error || "Could not generate the interviewer voice.";
+          return;
+        }
+        clip = {
+          audioBase64: data.audioBase64,
+          mimeType: data.mimeType || "audio/wav",
+          alignment: data.alignment || null
+        };
+        audioCache.set(spoken, clip);
+      }
+      await playClip(spoken, id, clip);
+    } catch (err) {
+      if (id !== speakId || (err instanceof DOMException && err.name === "AbortError")) return;
+      preparing.value = false;
+      speaking.value = false;
+      error.value = "Could not generate the interviewer voice.";
     }
-    pendingSpeak = null;
-    playUtterance(text, id);
   }
 
   function stopSpeaking() {
-    if (!synthesisSupported.value) return;
     speakId += 1;
-    pendingSpeak = null;
-    window.speechSynthesis.cancel();
+    speakAbort?.abort();
+    stopAudio();
+    preparing.value = false;
     speaking.value = false;
   }
 
@@ -198,12 +375,12 @@ export function useSpeech() {
     interimTranscript,
     listening,
     speaking,
+    preparing,
     error,
     spokenText,
     boundaryIndex,
     boundarySeen,
     recognitionSupported,
-    synthesisSupported,
     start,
     stop,
     clearTranscript,

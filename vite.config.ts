@@ -2,11 +2,13 @@ import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
 import tailwindcss from "@tailwindcss/vite";
 import { VitePWA } from "vite-plugin-pwa";
+import { kokoroPlugin } from "./server/kokoroPlugin";
 
 export default defineConfig(({ mode }) => ({
   plugins: [
     vue(),
     tailwindcss(),
+    kokoroPlugin(),
     VitePWA({
       registerType: "prompt",
       includeAssets: ["favicon.svg"],

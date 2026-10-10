@@ -85,6 +85,11 @@ onMounted(() => {
   sessionStore.start(mode.value, bank.value, difficulty.value);
 });
 
+function onAnswerInput(event: Event) {
+  if (speech.listening.value) return;
+  answerText.value = (event.target as HTMLTextAreaElement).value;
+}
+
 function mergeTranscriptIntoAnswer() {
   const merged = `${answerText.value} ${speech.transcript.value} ${speech.interimTranscript.value}`.trim();
   answerText.value = merged.replace(/\s+/g, " ");
@@ -102,6 +107,7 @@ function toggleMic() {
 
 function submitAnswer() {
   if (!canSubmit.value || !banksStore.coach) return;
+  if (speech.listening.value) speech.stop();
   mergeTranscriptIntoAnswer();
   sessionStore.submit(answerText.value.trim(), banksStore.coach);
 }
@@ -165,9 +171,11 @@ function stopAssessment() {
       </div>
 
       <textarea
-        v-model="answerText"
+        :value="speech.listening ? `${answerText} ${speech.transcript} ${speech.interimTranscript}`.replace(/\s+/g, ' ').trim() : answerText"
         class="soft-input min-h-36 w-full p-3 text-sm outline-none"
+        :readonly="speech.listening"
         placeholder="Write your answer here..."
+        @input="onAnswerInput"
       />
 
       <div v-if="inputMode === 'voice'" class="mt-3 space-y-2">

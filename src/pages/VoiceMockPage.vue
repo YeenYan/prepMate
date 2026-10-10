@@ -22,8 +22,9 @@ const speech = useSpeech();
 const {
   listening,
   speaking,
-  interimTranscript,
+  preparing,
   boundaryIndex,
+  boundarySeen,
   spokenText,
   recognitionSupported
 } = speech;
@@ -76,7 +77,7 @@ const questionWords = computed(() => {
 });
 
 const readingQuestion = computed(
-  () => speaking.value && spokenText.value === questionText.value
+  () => speaking.value && boundarySeen.value && spokenText.value === questionText.value
 );
 
 const liveAnswer = computed(() =>
@@ -91,6 +92,7 @@ const canSubmit = computed(
 
 const orbState = computed(() => {
   if (speaking.value) return "speaking" as const;
+  if (preparing.value) return "thinking" as const;
   if (listening.value) return "listening" as const;
   if (submitting.value) return "thinking" as const;
   if (speech.error.value) return "error" as const;
@@ -98,6 +100,7 @@ const orbState = computed(() => {
 });
 
 const statusLabel = computed(() => {
+  if (preparing.value) return "Preparing the question";
   if (speaking.value) return "Speaking";
   if (listening.value) return `Listening ${formatDuration(recordSeconds.value)}`;
   if (submitting.value) return "Reviewing your answer";
@@ -135,6 +138,11 @@ function captureDraft() {
   const next = liveAnswer.value;
   if (next) answerDraft.value = next;
   speech.clearTranscript();
+}
+
+function onDraftInput(event: Event) {
+  if (listening.value || submitting.value) return;
+  answerDraft.value = (event.target as HTMLTextAreaElement).value;
 }
 
 function toggleListening() {
@@ -291,20 +299,17 @@ onUnmounted(() => {
     </button>
 
     <p v-if="listening" class="mb-0 mt-4 text-sm text-[var(--color-text-secondary)]" role="status">
-      Recording {{ formatDuration(recordSeconds) }}
-    </p>
-
-    <p v-if="listening && interimTranscript" class="mb-0 mt-3 w-full text-center text-sm text-[var(--color-text-secondary)]">
-      {{ interimTranscript }}
+      Recording {{ formatDuration(recordSeconds) }}. Pauses are kept. Submit when you are done.
     </p>
 
     <textarea
-      v-if="!submittedAnswer && (!recognitionSupported || answerDraft)"
-      v-model="answerDraft"
+      v-if="!submittedAnswer"
+      :value="listening ? liveAnswer : answerDraft"
       class="soft-input mt-4 min-h-24 w-full p-3 text-sm outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--color-accent)]"
-      :readonly="submitting"
+      :readonly="listening || submitting"
       aria-label="Your answer"
       placeholder="Your spoken transcript appears here. You can edit it before submit."
+      @input="onDraftInput"
     />
 
     <button
