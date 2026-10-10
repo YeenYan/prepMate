@@ -69,7 +69,8 @@
 				<span
 					v-if="title === 'PrepMate'"
 					class="text-[10px] font-medium tracking-wide text-[var(--color-text-secondary)]"
-				>v1.0</span>
+					>v1.1</span
+				>
 			</p>
 			<div class="h-9 w-9"></div>
 		</header>
