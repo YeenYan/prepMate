@@ -17,3 +17,12 @@ declare module "virtual:pwa-register" {
 interface Window {
   __pwaUpdateSW?: (reloadPage?: boolean) => Promise<void>;
 }
+
+interface ImportMetaEnv {
+  readonly VITE_SUPABASE_URL: string;
+  readonly VITE_SUPABASE_ANON_KEY: string;
+}
+
+interface ImportMeta {
+  readonly env: ImportMetaEnv;
+}

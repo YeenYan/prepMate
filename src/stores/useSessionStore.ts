@@ -1,13 +1,16 @@
 import { defineStore } from "pinia";
 import { computed, ref } from "vue";
 import { scoreAnswer } from "../composables/useScoring";
+import { pushActiveSession, pushSummary } from "../lib/cloudSync";
 import {
   clearActiveSession,
   readActiveSession,
   readLastSummary,
   readSummaryList,
   saveActiveSession,
-  saveSummary
+  saveSummary,
+  writeActiveSession,
+  writeSummaryList
 } from "../composables/useSessionPersistence";
 import { shuffleArray } from "../utils/shuffle";
 import type {
@@ -58,6 +61,7 @@ export const useSessionStore = defineStore("session", () => {
     if (!session.value) return;
     session.value.updatedAt = Date.now();
     saveActiveSession(session.value);
+    void pushActiveSession(session.value);
   }
 
   function start(mode: ModeKey, bank: ModeBank, difficulty?: DifficultyKey) {
@@ -176,6 +180,8 @@ export const useSessionStore = defineStore("session", () => {
     lastSummary.value = summary;
     summaryHistory.value = readSummaryList();
     clearActiveSession();
+    void pushSummary(summary);
+    void pushActiveSession(null);
     return summary;
   }
 
@@ -192,6 +198,49 @@ export const useSessionStore = defineStore("session", () => {
     session.value = null;
     latestScore.value = null;
     clearActiveSession();
+    void pushActiveSession(null);
+  }
+
+  function applyCloudState(nextSession: SessionState | null, summaries: SummaryRecord[]) {
+    const trimmed = summaries.slice(0, 20);
+    session.value = nextSession;
+    latestScore.value = null;
+    writeActiveSession(nextSession);
+    summaryHistory.value = trimmed;
+    lastSummary.value = trimmed[0] ?? null;
+    writeSummaryList(trimmed);
+  }
+
+  function applyRemoteSession(nextSession: SessionState | null, updatedAt: number) {
+    const localAt = session.value?.updatedAt ?? 0;
+    if (!nextSession) {
+      if (localAt > updatedAt) return;
+      session.value = null;
+      latestScore.value = null;
+      writeActiveSession(null);
+      return;
+    }
+    if (localAt > nextSession.updatedAt) return;
+    if (
+      session.value?.sessionId === nextSession.sessionId &&
+      session.value.updatedAt === nextSession.updatedAt
+    ) {
+      return;
+    }
+    session.value = nextSession;
+    latestScore.value = null;
+    writeActiveSession(nextSession);
+  }
+
+  function applyRemoteSummary(summary: SummaryRecord) {
+    const existing = summaryHistory.value.find((item) => item.sessionId === summary.sessionId);
+    if (existing && existing.completedAt >= summary.completedAt) return;
+    const next = [summary, ...summaryHistory.value.filter((item) => item.sessionId !== summary.sessionId)]
+      .sort((a, b) => b.completedAt - a.completedAt)
+      .slice(0, 20);
+    summaryHistory.value = next;
+    lastSummary.value = next[0] ?? null;
+    writeSummaryList(next);
   }
 
   return {
@@ -204,6 +253,9 @@ export const useSessionStore = defineStore("session", () => {
     skippedCount,
     remainingCount,
     hydrateFromStorage,
+    applyCloudState,
+    applyRemoteSession,
+    applyRemoteSummary,
     start,
     resumeOrStart,
     submit,

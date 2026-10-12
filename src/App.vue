@@ -1,11 +1,17 @@
 <script setup lang="ts">
 	import { computed, onMounted, onUnmounted, ref } from "vue";
 	import { useRoute, useRouter } from "vue-router";
-	import { ArrowLeftIcon } from "@heroicons/vue/24/outline";
+	import {
+		ArrowLeftIcon,
+		ArrowRightOnRectangleIcon,
+	} from "@heroicons/vue/24/outline";
 	import AppBottomNav from "./components/AppBottomNav.vue";
+	import AuthScreen from "./components/AuthScreen.vue";
+	import { useAuthStore } from "./stores/useAuthStore";
 
 	const route = useRoute();
 	const router = useRouter();
+	const auth = useAuthStore();
 	const layoutStyle = ref<Record<string, string>>({});
 
 	const title = computed(() => {
@@ -38,6 +44,7 @@
 	}
 
 	onMounted(() => {
+		auth.init();
 		syncLayoutViewport();
 		window.visualViewport?.addEventListener("resize", syncLayoutViewport);
 		window.visualViewport?.addEventListener("scroll", syncLayoutViewport);
@@ -52,7 +59,10 @@
 
 <template>
 	<div class="app-shell" :style="layoutStyle">
+		<AuthScreen v-if="!auth.ready || !auth.signedIn" />
+
 		<header
+			v-else
 			class="relative z-20 flex items-center justify-between px-4 pb-2 pt-[max(0.8rem,env(safe-area-inset-top))]"
 		>
 			<button
@@ -69,16 +79,28 @@
 				<span
 					v-if="title === 'PrepMate'"
 					class="text-[10px] font-medium tracking-wide text-[var(--color-text-secondary)]"
-					>v1.1</span
+					>v1.2</span
 				>
 			</p>
-			<div class="h-9 w-9"></div>
+			<button
+				class="pill-button glass h-9 w-9 text-sm"
+				aria-label="Sign out"
+				@click="auth.signOut()"
+			>
+				<ArrowRightOnRectangleIcon class="mx-auto h-4 w-4" aria-hidden="true" />
+			</button>
 		</header>
 
-		<main class="scroll-area flex flex-col px-4 pb-2">
+		<main v-if="auth.signedIn" class="scroll-area flex flex-col px-4 pb-2">
+			<p
+				v-if="auth.syncError"
+				class="mb-3 rounded-2xl bg-red-500/15 px-4 py-3 text-sm text-red-300"
+			>
+				{{ auth.syncError }}
+			</p>
 			<router-view />
 		</main>
 
-		<AppBottomNav v-if="showBottomNav" />
+		<AppBottomNav v-if="auth.signedIn && showBottomNav" />
 	</div>
 </template>
