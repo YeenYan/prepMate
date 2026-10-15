@@ -7,18 +7,14 @@
 			"id": "frontend-easy-001",
 			"category": "JavaScript",
 			"question": "What is the difference between let, const, and var?",
-			"sampleAnswer": "I explain it in three parts: scope, reassignment, and hoisting behavior. var is function-scoped and can be redeclared, which often causes accidental overwrites. let and const are block-scoped, so they are safer inside loops and conditionals. let can be reassigned, while const cannot be reassigned after initialization. In modern code I default to const, use let when a value must change, and avoid var to reduce bugs.",
+			"sampleAnswer": "Var is a function-scoped and can be redeclared and reassigned. Let and Const are block-scoped, where Let can be reassigned, so use Let if value is changing while Const cannot be reassigned after initialization",
 			"keyPoints": [
 				"scope differences",
 				"redeclare vs reassign",
 				"prefer const and let"
 			],
-			"hints": [
-				"Start with scope, then assignment rules."
-			],
-			"followUps": [
-				"When would using let be better than const?"
-			],
+			"hints": ["Start with scope, then assignment rules."],
+			"followUps": ["When would using let be better than const?"],
 			"voicePrompt": "Tell me the difference between let, const, and var.",
 			"difficulty": "easy"
 		},
@@ -26,18 +22,14 @@
 			"id": "frontend-easy-002",
 			"category": "JavaScript",
 			"question": "What is a closure in JavaScript?",
-			"sampleAnswer": "A closure happens when a function keeps access to variables from its outer scope even after that outer function has finished running. I use closures when I want private state, like counters or memoized functions, without exposing variables globally. For example, a function can return another function that increments an internal variable each call. That internal value stays available because the returned function closes over it.",
+			"sampleAnswer": "A closure lets the function remember the information and keep using it even after the function has finished running.",
 			"keyPoints": [
 				"function remembers outer scope",
 				"private state",
 				"practical example"
 			],
-			"hints": [
-				"Use the counter example."
-			],
-			"followUps": [
-				"How can closures cause memory issues?"
-			],
+			"hints": ["Use the counter example."],
+			"followUps": ["How can closures cause memory issues?"],
 			"voicePrompt": "What is a closure in JavaScript?",
 			"difficulty": "easy"
 		},
@@ -45,133 +37,67 @@
 			"id": "frontend-easy-003",
 			"category": "TypeScript",
 			"question": "Why use TypeScript instead of plain JavaScript?",
-			"sampleAnswer": "I use TypeScript because it catches many mistakes before runtime and improves maintainability. Static types make contracts between functions and components clear, which helps team collaboration. Editors also provide better autocomplete and refactoring support, so productivity goes up in larger codebases. I still run the app normally as JavaScript, but TypeScript gives me safer development feedback earlier.",
-			"keyPoints": [
-				"static checks",
-				"maintainability",
-				"better tooling"
-			],
-			"hints": [
-				"Mention runtime safety and team clarity."
-			],
-			"followUps": [
-				"What are drawbacks of TypeScript?"
-			],
+			"sampleAnswer": "I prefer using Typescript over plain javascript because it provides strict type checking, which helps catch potential errors or bugs during development before they reach production. It also makes the code easier to read and maintain.",
+			"keyPoints": ["static checks", "maintainability", "better tooling"],
+			"hints": ["Mention runtime safety and team clarity."],
+			"followUps": ["What are drawbacks of TypeScript?"],
 			"voicePrompt": "Why do you choose TypeScript?",
 			"difficulty": "easy"
 		},
 		{
 			"id": "frontend-easy-004",
-			"category": "CSS",
-			"question": "What is the box model in CSS?",
-			"sampleAnswer": "The CSS box model describes how element size is calculated using content, padding, border, and margin. Content is the inner area where text or media appears. Padding adds space inside the border, border surrounds padding and content, and margin adds space outside the element. I usually set box-sizing to border-box so width and height include padding and border, which makes layouts easier to reason about.",
-			"keyPoints": [
-				"content padding border margin",
-				"sizing behavior",
-				"border-box usage"
-			],
-			"hints": [
-				"Mention default vs border-box."
-			],
-			"followUps": [
-				"How does margin collapsing work?"
-			],
-			"voicePrompt": "Explain the CSS box model.",
-			"difficulty": "easy"
-		},
-		{
-			"id": "frontend-easy-005",
 			"category": "Vue",
 			"question": "What is the purpose of reactive state in Vue?",
-			"sampleAnswer": "Reactive state lets the UI update automatically when data changes. Instead of manually touching the DOM, I change state and Vue tracks dependencies, then re-renders the needed parts efficiently. In Composition API I use ref for primitive values and reactive for object-like state. This model makes components predictable because rendering always reflects the current state.",
+			"sampleAnswer": "Reactive state in Vue allows the UI to update automatically whenever the data changes, so I don't have to manually update the DOM. When using the Composition API, I usually use ref for primitive values and reactive for object-like state.",
 			"keyPoints": [
 				"automatic UI updates",
 				"dependency tracking",
 				"ref and reactive"
 			],
-			"hints": [
-				"Explain one-way data flow quickly."
-			],
-			"followUps": [
-				"When do you prefer computed over methods?"
-			],
+			"hints": ["Explain one-way data flow quickly."],
+			"followUps": ["When do you prefer computed over methods?"],
 			"voicePrompt": "Why is reactive state important in Vue?",
 			"difficulty": "easy"
 		},
 		{
-			"id": "frontend-easy-006",
+			"id": "frontend-easy-005",
 			"category": "Web Performance",
 			"question": "Name two quick ways to improve frontend performance.",
-			"sampleAnswer": "First, I reduce JavaScript bundle size through code splitting and removing unused dependencies, because smaller bundles load faster. Second, I optimize images by using modern formats and appropriate sizes for each viewport. I also watch caching headers and lazy-load non-critical UI sections, but if I only pick two, bundle size and image optimization usually give the fastest wins.",
-			"keyPoints": [
-				"reduce bundle size",
-				"optimize images",
-				"lazy load optional"
-			],
-			"hints": [
-				"Choose practical examples."
-			],
-			"followUps": [
-				"How do you measure impact?"
-			],
+			"sampleAnswer": "First, I reduce the Javascript bundle size through code splitting and removing unused dependencies, so the application loads faster. Second, I optimize images by converting them to WebpP format and using lazy loading, so images only load when they're needed. This helps improve the initial loading time of the page.",
+			"keyPoints": ["reduce bundle size", "optimize images", "lazy load optional"],
+			"hints": ["Choose practical examples."],
+			"followUps": ["How do you measure impact?"],
 			"voicePrompt": "Give two fast frontend performance improvements.",
 			"difficulty": "easy"
 		},
 		{
-			"id": "frontend-easy-007",
+			"id": "frontend-easy-006",
 			"category": "Testing",
 			"question": "What is the difference between unit and integration tests?",
-			"sampleAnswer": "Unit tests verify a small piece of logic in isolation, usually a function or component behavior with dependencies mocked. Integration tests verify that multiple parts work together, such as a component with a real store or API layer mock server. I rely on unit tests for fast feedback and integration tests for confidence in actual user flows. A healthy project usually uses both.",
+			"sampleAnswer": "Unit testing checks whether one small piece of code is working correctly, while integration testing checks whether multiple pieces of code work correctly together.",
 			"keyPoints": [
 				"isolation vs collaboration",
 				"mocking differences",
 				"both are useful"
 			],
-			"hints": [
-				"Tie each test type to confidence level."
-			],
-			"followUps": [
-				"Where do end-to-end tests fit?"
-			],
+			"hints": ["Tie each test type to confidence level."],
+			"followUps": ["Where do end-to-end tests fit?"],
 			"voicePrompt": "Differentiate unit and integration tests.",
 			"difficulty": "easy"
 		},
 		{
-			"id": "frontend-easy-008",
+			"id": "frontend-easy-007",
 			"category": "Accessibility",
 			"question": "Why are semantic HTML elements important?",
-			"sampleAnswer": "Semantic HTML gives meaning to structure, which helps screen readers, keyboard navigation, and search engines understand content correctly. For example, using button for actions and nav for navigation is better than generic div elements with click handlers. It also reduces custom ARIA work because many semantics are built in. I treat semantic markup as the first step of accessible UI.",
+			"sampleAnswer": "Semantic HTML elements are important because they make the code easier to understand and help search engines understand the structure and content of a webpabe.",
 			"keyPoints": [
 				"assistive technology",
 				"correct element choice",
 				"less ARIA complexity"
 			],
-			"hints": [
-				"Mention keyboard and screen readers."
-			],
-			"followUps": [
-				"When should ARIA be added?"
-			],
+			"hints": ["Mention keyboard and screen readers."],
+			"followUps": ["When should ARIA be added?"],
 			"voicePrompt": "Why does semantic HTML matter?",
-			"difficulty": "easy"
-		},
-		{
-			"id": "frontend-easy-009",
-			"category": "JavaScript",
-			"question": "What is event bubbling?",
-			"sampleAnswer": "Event bubbling means an event starts at the target element and then propagates upward through its parent elements. If I click a button inside a card, both button and card listeners can run unless propagation is stopped. I use this behavior for event delegation on lists to reduce many individual listeners. When needed, I call stopPropagation carefully to prevent unwanted parent handlers.",
-			"keyPoints": [
-				"event travels upward",
-				"parent handlers can trigger",
-				"delegation use case"
-			],
-			"hints": [
-				"Give one click example."
-			],
-			"followUps": [
-				"What is event capturing?"
-			],
-			"voicePrompt": "Explain event bubbling.",
 			"difficulty": "easy"
 		},
 		{
@@ -184,12 +110,8 @@
 				"escape or sanitize input",
 				"CSP and validation"
 			],
-			"hints": [
-				"Mention avoiding dangerous HTML APIs."
-			],
-			"followUps": [
-				"What is stored vs reflected XSS?"
-			],
+			"hints": ["Mention avoiding dangerous HTML APIs."],
+			"followUps": ["What is stored vs reflected XSS?"],
 			"voicePrompt": "What is XSS and how do you avoid it?",
 			"difficulty": "easy"
 		},
@@ -203,12 +125,8 @@
 				"async/await for readable sequential flow",
 				"try/catch and Promise.all"
 			],
-			"hints": [
-				"Mention error handling and parallel work."
-			],
-			"followUps": [
-				"When would you use Promise.allSettled instead?"
-			],
+			"hints": ["Mention error handling and parallel work."],
+			"followUps": ["When would you use Promise.allSettled instead?"],
 			"voicePrompt": "How do you handle async code with Promises and async await?",
 			"difficulty": "easy"
 		},
@@ -222,12 +140,8 @@
 				"state is local and mutable",
 				"emit instead of mutating props"
 			],
-			"hints": [
-				"Contrast ownership of the data."
-			],
-			"followUps": [
-				"When would you use v-model on a child component?"
-			],
+			"hints": ["Contrast ownership of the data."],
+			"followUps": ["When would you use v-model on a child component?"],
 			"voicePrompt": "What is the difference between props and state in Vue?",
 			"difficulty": "easy"
 		},
@@ -241,12 +155,8 @@
 				"Composition groups by feature",
 				"composables and TypeScript fit"
 			],
-			"hints": [
-				"Explain organization, not just syntax."
-			],
-			"followUps": [
-				"When is Options API still a good choice?"
-			],
+			"hints": ["Explain organization, not just syntax."],
+			"followUps": ["When is Options API still a good choice?"],
 			"voicePrompt": "Compare Options API and Composition API in Vue.",
 			"difficulty": "easy"
 		},
@@ -260,12 +170,8 @@
 				"Grid is two-dimensional",
 				"often used together"
 			],
-			"hints": [
-				"Give one example for each."
-			],
-			"followUps": [
-				"When would you still use floats or positioning?"
-			],
+			"hints": ["Give one example for each."],
+			"followUps": ["When would you still use floats or positioning?"],
 			"voicePrompt": "When do you use CSS Grid versus Flexbox?",
 			"difficulty": "easy"
 		},
@@ -279,9 +185,7 @@
 				"fluid layout and relative units",
 				"test real viewports"
 			],
-			"hints": [
-				"Mention fluid layout before listing breakpoints."
-			],
+			"hints": ["Mention fluid layout before listing breakpoints."],
 			"followUps": [
 				"How do you handle a component that needs a different mobile structure?"
 			],
@@ -298,12 +202,8 @@
 				"DevTools and Vue DevTools",
 				"verify the fix"
 			],
-			"hints": [
-				"Mention both browser tools and Vue DevTools."
-			],
-			"followUps": [
-				"How do you debug a production-only issue?"
-			],
+			"hints": ["Mention both browser tools and Vue DevTools."],
+			"followUps": ["How do you debug a production-only issue?"],
 			"voicePrompt": "How do you debug JavaScript and Vue apps?",
 			"difficulty": "easy"
 		},
@@ -317,12 +217,8 @@
 				"microtasks before macrotasks",
 				"Promise then vs setTimeout"
 			],
-			"hints": [
-				"Define both queue types clearly."
-			],
-			"followUps": [
-				"Where does requestAnimationFrame fit?"
-			],
+			"hints": ["Define both queue types clearly."],
+			"followUps": ["Where does requestAnimationFrame fit?"],
 			"voicePrompt": "Explain microtasks and macrotasks in the event loop.",
 			"difficulty": "intermediate"
 		},
@@ -336,12 +232,8 @@
 				"decouple logic from UI",
 				"keep scope focused"
 			],
-			"hints": [
-				"Give concrete examples."
-			],
-			"followUps": [
-				"When is a simple helper function enough?"
-			],
+			"hints": ["Give concrete examples."],
+			"followUps": ["When is a simple helper function enough?"],
 			"voicePrompt": "When do you write a Vue composable?",
 			"difficulty": "intermediate"
 		},
@@ -355,12 +247,8 @@
 				"timeouts and cancellation",
 				"idempotency and retries"
 			],
-			"hints": [
-				"Mention user feedback."
-			],
-			"followUps": [
-				"How would you handle offline retries?"
-			],
+			"hints": ["Mention user feedback."],
+			"followUps": ["How would you handle offline retries?"],
 			"voicePrompt": "Describe a resilient frontend API strategy.",
 			"difficulty": "intermediate"
 		},
@@ -374,12 +262,8 @@
 				"global for shared lifecycle",
 				"smallest necessary scope"
 			],
-			"hints": [
-				"Use practical examples."
-			],
-			"followUps": [
-				"What are signs of overusing global state?"
-			],
+			"hints": ["Use practical examples."],
+			"followUps": ["What are signs of overusing global state?"],
 			"voicePrompt": "How do you choose local vs global state?",
 			"difficulty": "intermediate"
 		},
@@ -393,12 +277,8 @@
 				"inspect waterfall and bundles",
 				"validate impact after fixes"
 			],
-			"hints": [
-				"Use an evidence-driven flow."
-			],
-			"followUps": [
-				"How do you avoid regressions later?"
-			],
+			"hints": ["Use an evidence-driven flow."],
+			"followUps": ["How do you avoid regressions later?"],
 			"voicePrompt": "Walk through debugging slow page loads.",
 			"difficulty": "intermediate"
 		},
@@ -412,12 +292,8 @@
 				"defend against XSS",
 				"rotation and expiry"
 			],
-			"hints": [
-				"Discuss tradeoffs, not absolutes."
-			],
-			"followUps": [
-				"When are cookies not enough?"
-			],
+			"hints": ["Discuss tradeoffs, not absolutes."],
+			"followUps": ["When are cookies not enough?"],
 			"voicePrompt": "How do you handle auth tokens safely?",
 			"difficulty": "intermediate"
 		},
@@ -431,12 +307,8 @@
 				"test fallback path",
 				"cover error states"
 			],
-			"hints": [
-				"Mention both unit and E2E levels."
-			],
-			"followUps": [
-				"How do you test on iOS Safari?"
-			],
+			"hints": ["Mention both unit and E2E levels."],
+			"followUps": ["How do you test on iOS Safari?"],
 			"voicePrompt": "How would you test voice input with typed fallback?",
 			"difficulty": "intermediate"
 		},
@@ -450,12 +322,8 @@
 				"safe-area env variables",
 				"touch-friendly controls"
 			],
-			"hints": [
-				"Mention sticky controls for actions."
-			],
-			"followUps": [
-				"How do you test safe areas on desktop?"
-			],
+			"hints": ["Mention sticky controls for actions."],
+			"followUps": ["How do you test safe areas on desktop?"],
 			"voicePrompt": "How do you design for responsive safe-area layouts?",
 			"difficulty": "intermediate"
 		},
@@ -469,12 +337,8 @@
 				"clear contracts",
 				"avoid premature splitting"
 			],
-			"hints": [
-				"Explain tradeoff between size and clarity."
-			],
-			"followUps": [
-				"What is your threshold for refactor?"
-			],
+			"hints": ["Explain tradeoff between size and clarity."],
+			"followUps": ["What is your threshold for refactor?"],
 			"voicePrompt": "When do you split components?",
 			"difficulty": "intermediate"
 		},
@@ -488,12 +352,8 @@
 				"rollback on failure",
 				"choose suitable operations"
 			],
-			"hints": [
-				"Mention mismatch risk."
-			],
-			"followUps": [
-				"How do you avoid flicker on rollback?"
-			],
+			"hints": ["Mention mismatch risk."],
+			"followUps": ["How do you avoid flicker on rollback?"],
 			"voicePrompt": "What are optimistic updates and tradeoffs?",
 			"difficulty": "intermediate"
 		},
@@ -507,12 +367,8 @@
 				"diff and patch only changes",
 				"compiler optimizations in Vue 3"
 			],
-			"hints": [
-				"Contrast virtual DOM updates with full DOM rewrites."
-			],
-			"followUps": [
-				"How does Vue reactivity decide what needs to re-render?"
-			],
+			"hints": ["Contrast virtual DOM updates with full DOM rewrites."],
+			"followUps": ["How does Vue reactivity decide what needs to re-render?"],
 			"voicePrompt": "Explain the virtual DOM in Vue and why it helps performance.",
 			"difficulty": "intermediate"
 		},
@@ -526,12 +382,8 @@
 				"Pinia for shared state",
 				"computed for derived data"
 			],
-			"hints": [
-				"Explain when state should leave the component."
-			],
-			"followUps": [
-				"When is provide/inject enough instead of Pinia?"
-			],
+			"hints": ["Explain when state should leave the component."],
+			"followUps": ["When is provide/inject enough instead of Pinia?"],
 			"voicePrompt": "How do you manage state in Vue with ref, reactive, and Pinia?",
 			"difficulty": "intermediate"
 		},
@@ -545,12 +397,8 @@
 				"Pinia for app-wide domains",
 				"avoid one giant store"
 			],
-			"hints": [
-				"Give a concrete example for each."
-			],
-			"followUps": [
-				"How do you persist Pinia state across refresh?"
-			],
+			"hints": ["Give a concrete example for each."],
+			"followUps": ["How do you persist Pinia state across refresh?"],
 			"voicePrompt": "How do you share global state in Vue with provide inject or Pinia?",
 			"difficulty": "intermediate"
 		},
@@ -564,12 +412,8 @@
 				"async components and list keys",
 				"avoid unnecessary reactivity work"
 			],
-			"hints": [
-				"List two Vue-specific techniques."
-			],
-			"followUps": [
-				"When would you use shallowRef?"
-			],
+			"hints": ["List two Vue-specific techniques."],
+			"followUps": ["When would you use shallowRef?"],
 			"voicePrompt": "How do you optimize a Vue app for performance?",
 			"difficulty": "intermediate"
 		},
@@ -583,12 +427,8 @@
 				"validate on blur or submit",
 				"handle client and server errors"
 			],
-			"hints": [
-				"Mention both simple validators and a library."
-			],
-			"followUps": [
-				"How do you handle multi-step forms?"
-			],
+			"hints": ["Mention both simple validators and a library."],
+			"followUps": ["How do you handle multi-step forms?"],
 			"voicePrompt": "How do you handle forms and validation in Vue?",
 			"difficulty": "intermediate"
 		},
@@ -602,9 +442,7 @@
 				"use-prefixed functions",
 				"return a small public API"
 			],
-			"hints": [
-				"Give one example like useFetch or useToggle."
-			],
+			"hints": ["Give one example like useFetch or useToggle."],
 			"followUps": [
 				"How is a composable different from a plain utility function?"
 			],
@@ -621,12 +459,8 @@
 				"params and navigation guards",
 				"lazy routes and 404 fallback"
 			],
-			"hints": [
-				"Mention guards for protected pages."
-			],
-			"followUps": [
-				"How do you keep query state in sync with filters?"
-			],
+			"hints": ["Mention guards for protected pages."],
+			"followUps": ["How do you keep query state in sync with filters?"],
 			"voicePrompt": "How do you set up routing with Vue Router?",
 			"difficulty": "intermediate"
 		},
@@ -640,12 +474,8 @@
 				"better first paint and SEO",
 				"keep code universal"
 			],
-			"hints": [
-				"Contrast SSR with a client-only Vue SPA."
-			],
-			"followUps": [
-				"When would you choose SSG instead of SSR?"
-			],
+			"hints": ["Contrast SSR with a client-only Vue SPA."],
+			"followUps": ["When would you choose SSG instead of SSR?"],
 			"voicePrompt": "Explain server-side rendering in Nuxt.",
 			"difficulty": "intermediate"
 		},
@@ -659,12 +489,8 @@
 				"useFetch for simple APIs",
 				"prerender vs per-request SSR"
 			],
-			"hints": [
-				"Map the idea to static versus request-time data."
-			],
-			"followUps": [
-				"How do you refresh data after a user action?"
-			],
+			"hints": ["Map the idea to static versus request-time data."],
+			"followUps": ["How do you refresh data after a user action?"],
 			"voicePrompt": "How do you fetch data in Nuxt with useAsyncData and useFetch?",
 			"difficulty": "intermediate"
 		},
@@ -678,12 +504,8 @@
 				"user-facing vs logged errors",
 				"cancel stale requests"
 			],
-			"hints": [
-				"Talk about UI state, not only fetch()."
-			],
-			"followUps": [
-				"How do you share one API error component across pages?"
-			],
+			"hints": ["Talk about UI state, not only fetch()."],
+			"followUps": ["How do you share one API error component across pages?"],
 			"voicePrompt": "How do you make API calls and handle errors in Vue?",
 			"difficulty": "intermediate"
 		},
@@ -697,12 +519,8 @@
 				"route guards plus server enforcement",
 				"expiry and forbidden handling"
 			],
-			"hints": [
-				"Stress that the API must still authorize."
-			],
-			"followUps": [
-				"Where do you store tokens and why?"
-			],
+			"hints": ["Stress that the API must still authorize."],
+			"followUps": ["Where do you store tokens and why?"],
 			"voicePrompt": "How do you handle authentication and authorization on the frontend?",
 			"difficulty": "intermediate"
 		},
@@ -716,9 +534,7 @@
 				"shrink critical path",
 				"lazy-load and re-measure"
 			],
-			"hints": [
-				"Start with measurement, then list fixes."
-			],
+			"hints": ["Start with measurement, then list fixes."],
 			"followUps": [
 				"Which metric would you prioritize for an e-commerce homepage?"
 			],
@@ -735,9 +551,7 @@
 				"offline and installable UX",
 				"cache updates are the hard part"
 			],
-			"hints": [
-				"Define it, then list two user benefits."
-			],
+			"hints": ["Define it, then list two user benefits."],
 			"followUps": [
 				"How do you notify users when a new service worker is waiting?"
 			],
@@ -754,12 +568,8 @@
 				"defineAsyncComponent for heavy UI",
 				"verify with a bundle analyzer"
 			],
-			"hints": [
-				"Mention both routes and components."
-			],
-			"followUps": [
-				"What do you put in the initial bundle versus a lazy chunk?"
-			],
+			"hints": ["Mention both routes and components."],
+			"followUps": ["What do you put in the initial bundle versus a lazy chunk?"],
 			"voicePrompt": "How do you do lazy loading and code splitting in Vue?",
 			"difficulty": "intermediate"
 		},
@@ -773,12 +583,8 @@
 				"semantic HTML and keyboard support",
 				"ARIA as a last step"
 			],
-			"hints": [
-				"Name the four WCAG principles if you can."
-			],
-			"followUps": [
-				"How do you handle accessible modals and focus trapping?"
-			],
+			"hints": ["Name the four WCAG principles if you can."],
+			"followUps": ["How do you handle accessible modals and focus trapping?"],
 			"voicePrompt": "What is WCAG and how do you implement accessibility?",
 			"difficulty": "intermediate"
 		},
@@ -792,12 +598,8 @@
 				"mock APIs and stores",
 				"prefer accessible queries"
 			],
-			"hints": [
-				"Describe arrange, act, assert."
-			],
-			"followUps": [
-				"When do you snapshot test a Vue component?"
-			],
+			"hints": ["Describe arrange, act, assert."],
+			"followUps": ["When do you snapshot test a Vue component?"],
 			"voicePrompt": "How do you unit test Vue components with Vitest?",
 			"difficulty": "intermediate"
 		},
@@ -811,12 +613,8 @@
 				"Cypress vs Selenium tradeoff",
 				"keep the suite small and stable"
 			],
-			"hints": [
-				"Explain purpose first, then tools."
-			],
-			"followUps": [
-				"How do you reduce flaky E2E tests?"
-			],
+			"hints": ["Explain purpose first, then tools."],
+			"followUps": ["How do you reduce flaky E2E tests?"],
 			"voicePrompt": "What is end-to-end testing with Cypress or Selenium?",
 			"difficulty": "intermediate"
 		},
@@ -830,12 +628,8 @@
 				"compose primitives into pages",
 				"clear props and events"
 			],
-			"hints": [
-				"Describe the primitive to page layering."
-			],
-			"followUps": [
-				"How does this relate to a design system?"
-			],
+			"hints": ["Describe the primitive to page layering."],
+			"followUps": ["How does this relate to a design system?"],
 			"voicePrompt": "What is component-driven architecture?",
 			"difficulty": "intermediate"
 		},
@@ -849,12 +643,8 @@
 				"accessible primitives",
 				"governance and versioning"
 			],
-			"hints": [
-				"Mention documentation and migration."
-			],
-			"followUps": [
-				"How do you avoid token sprawl?"
-			],
+			"hints": ["Mention documentation and migration."],
+			"followUps": ["How do you avoid token sprawl?"],
 			"voicePrompt": "Design a cross-team frontend design system.",
 			"difficulty": "advanced"
 		},
@@ -868,12 +658,8 @@
 				"CI and monitoring",
 				"review discipline"
 			],
-			"hints": [
-				"Include both pre and post release checks."
-			],
-			"followUps": [
-				"How strict should budgets be?"
-			],
+			"hints": ["Include both pre and post release checks."],
+			"followUps": ["How strict should budgets be?"],
 			"voicePrompt": "How do you prevent frontend performance regressions?",
 			"difficulty": "advanced"
 		},
@@ -887,12 +673,8 @@
 				"responsive component system",
 				"testing and environment config"
 			],
-			"hints": [
-				"Walk through architecture, not a feature laundry list."
-			],
-			"followUps": [
-				"How would you handle offline use or optimistic updates?"
-			],
+			"hints": ["Walk through architecture, not a feature laundry list."],
+			"followUps": ["How would you handle offline use or optimistic updates?"],
 			"voicePrompt": "How would you build a complete Vue app that uses APIs, state, and responsive UI?",
 			"difficulty": "advanced"
 		}
