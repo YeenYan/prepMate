@@ -117,6 +117,35 @@ export const useBanksStore = defineStore("banks", () => {
     if (banks.value) banks.value[mode].questions = questions;
   }
 
+  function addQuestion(
+    mode: ModeKey,
+    question: string,
+    sampleAnswer: string,
+    difficulty?: DifficultyKey
+  ) {
+    if (!banks.value) return;
+    const text = question.trim();
+    const answer = sampleAnswer.trim();
+    if (!text || !answer) return;
+    if (mode !== "basics" && !difficulty) return;
+
+    const item: InterviewQuestion = {
+      id: `${mode}-${difficulty || "all"}-${Date.now()}`,
+      category: "Custom",
+      difficulty: mode === "basics" ? undefined : difficulty,
+      question: text,
+      sampleAnswer: answer,
+      keyPoints: [],
+      hints: [],
+      followUps: [],
+      tags: [],
+      voicePrompt: text
+    };
+
+    banks.value[mode].questions = [...banks.value[mode].questions, item];
+    saveMode(mode);
+  }
+
   function updateQuestion(mode: ModeKey, id: string, question: string, sampleAnswer: string) {
     const bank = banks.value?.[mode];
     if (!bank) return;
@@ -164,6 +193,7 @@ export const useBanksStore = defineStore("banks", () => {
     replaceEdits,
     applyRemoteMode,
     reloadMode,
+    addQuestion,
     updateQuestion,
     deleteQuestion
   };

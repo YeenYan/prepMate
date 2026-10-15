@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { computed, onMounted, ref, watch } from "vue";
 import { useRoute } from "vue-router";
-import { PencilSquareIcon, TrashIcon } from "@heroicons/vue/24/outline";
+import { PencilSquareIcon, PlusIcon, TrashIcon } from "@heroicons/vue/24/outline";
+import AddQuestionSheet from "../components/AddQuestionSheet.vue";
 import { useBanksStore } from "../stores/useBanksStore";
 import type { DifficultyKey, InterviewQuestion, ModeKey } from "../types/interview";
 import { DIFFICULTY_KEYS, isModeKey } from "../types/interview";
@@ -15,6 +16,7 @@ const editing = ref(false);
 const draftQuestion = ref("");
 const draftAnswer = ref("");
 const confirmDelete = ref(false);
+const adding = ref(false);
 
 const mode = computed<ModeKey | null>(() => {
   const value = String(route.params.mode || "");
@@ -87,18 +89,46 @@ function confirmRemove() {
   banksStore.deleteQuestion(mode.value, openQuestion.value.id);
   closeDrawer();
 }
+
+const addHeading = computed(() => {
+  const title = bank.value?.title || "Module";
+  if (!needsDifficulty.value) return title;
+  const level = selectedDifficulty.value;
+  return `${title} · ${level.charAt(0).toUpperCase()}${level.slice(1)}`;
+});
+
+function saveNew(payload: { question: string; sampleAnswer: string }) {
+  if (!mode.value) return;
+  banksStore.addQuestion(
+    mode.value,
+    payload.question,
+    payload.sampleAnswer,
+    needsDifficulty.value ? selectedDifficulty.value : undefined
+  );
+  adding.value = false;
+}
 </script>
 
 <template>
   <section class="flex min-h-full flex-1 flex-col space-y-5 pt-2">
-    <div>
-      <h1 class="m-0 text-xl font-semibold tracking-[-0.02em]">{{ bank?.title || "Mode" }}</h1>
-      <p class="mb-0 mt-1 text-sm text-[var(--color-text-secondary)]">
-        {{ bank?.description || "Select a mode to begin." }}
-      </p>
-      <p class="mb-0 mt-2 text-sm text-[var(--color-text-secondary)]">
-        {{ bank?.questions.length || 0 }} questions in this bank
-      </p>
+    <div class="flex items-start justify-between gap-3">
+      <div>
+        <h1 class="m-0 text-xl font-semibold tracking-[-0.02em]">{{ bank?.title || "Mode" }}</h1>
+        <p class="mb-0 mt-1 text-sm text-[var(--color-text-secondary)]">
+          {{ bank?.description || "Select a mode to begin." }}
+        </p>
+        <p class="mb-0 mt-2 text-sm text-[var(--color-text-secondary)]">
+          {{ bank?.questions.length || 0 }} questions in this bank
+        </p>
+      </div>
+      <button
+        type="button"
+        class="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[var(--color-accent)] text-white"
+        aria-label="Add question"
+        @click="adding = true"
+      >
+        <PlusIcon class="h-5 w-5" aria-hidden="true" />
+      </button>
     </div>
 
     <div v-if="needsDifficulty" class="flex gap-2">
@@ -145,6 +175,13 @@ function confirmRemove() {
     <p v-if="!mode" class="rounded-2xl bg-red-500/15 px-4 py-3 text-sm text-red-300">
       Invalid mode route.
     </p>
+
+    <AddQuestionSheet
+      :open="adding"
+      :heading="addHeading"
+      @close="adding = false"
+      @save="saveNew"
+    />
 
     <Transition name="drawer">
       <div v-if="openQuestion" class="fixed inset-0 z-[70] flex items-end">
